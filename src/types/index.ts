@@ -1,9 +1,23 @@
-export type RepairMode = 'inspection' | 'measurement' | 'repair' | 'creation' | 'validation';
+export type RepairMode =
+  | 'inspection'
+  | 'measurement'
+  | 'repair'
+  | 'creation'
+  | 'validation';
 
 export interface Component {
   id: string;
   name: string;
-  type: 'resistor' | 'capacitor' | 'ic' | 'connector' | 'module' | 'pin' | 'testpoint';
+  type:
+    | 'resistor'
+    | 'capacitor'
+    | 'ic'
+    | 'connector'
+    | 'module'
+    | 'pin'
+    | 'testpoint'
+    | 'regulator'
+    | 'microcontroller';
   position: {x: number; y: number};
   pins?: Pin[];
   description?: string;
@@ -13,7 +27,7 @@ export interface Component {
 export interface Pin {
   id: string;
   name: string;
-  type: 'VCC' | 'GND' | 'DATA' | 'GPIO' | 'ANALOG';
+  type: 'VCC' | 'GND' | 'DATA' | 'GPIO' | 'ANALOG' | 'VIN' | 'VOUT' | 'IO';
   position: {x: number; y: number};
   voltage?: number;
 }
@@ -24,8 +38,14 @@ export interface MeasurementPoint {
   pinId?: string;
   expectedValue: string;
   expectedRange: {min: number; max: number};
-  unit: 'V' | 'A' | 'Ω' | 'Hz';
+  unit: 'V' | 'A' | 'Ω' | 'Hz' | 'continuity';
   description: string;
+  measurementType?:
+    | 'voltage'
+    | 'current'
+    | 'resistance'
+    | 'continuity'
+    | 'frequency';
 }
 
 export interface RepairStep {
@@ -47,7 +67,16 @@ export interface ModuleGuide {
   pinConnections: {
     modulePin: string;
     boardPin: string;
-    pinType: 'VCC' | 'GND' | 'TX' | 'RX' | 'SCL' | 'SDA' | 'MISO' | 'MOSI' | 'SCK';
+    pinType:
+      | 'VCC'
+      | 'GND'
+      | 'TX'
+      | 'RX'
+      | 'SCL'
+      | 'SDA'
+      | 'MISO'
+      | 'MOSI'
+      | 'SCK';
   }[];
   testingSteps: RepairStep[];
 }
@@ -59,4 +88,55 @@ export interface ValidationTest {
   measurementPoints: MeasurementPoint[];
   passCriteria: string;
   failureActions: string[];
+}
+
+export interface MeasurementLog {
+  id: string;
+  timestamp: string;
+  mode: RepairMode;
+  componentId: string;
+  pinId?: string;
+  measuredValue: number;
+  expectedValue: string;
+  unit: string;
+  passed: boolean;
+  notes?: string;
+}
+
+export interface ValidationResult {
+  id: string;
+  timestamp: string;
+  testId: string;
+  testName: string;
+  passed: boolean;
+  results: {
+    measurementId: string;
+    passed: boolean;
+    measuredValue?: number;
+    expectedValue: string;
+  }[];
+  notes?: string;
+}
+
+export interface FirmwareStub {
+  id: string;
+  moduleName: string;
+  moduleType: string;
+  platform: 'arduino' | 'esp32' | 'esp8266';
+  code: string;
+  dependencies: string[];
+  instructions: string[];
+}
+
+export interface PowerOnChecklist {
+  id: string;
+  name: string;
+  description: string;
+  steps: {
+    id: string;
+    order: number;
+    description: string;
+    checkType: 'visual' | 'measurement' | 'continuity';
+    passed?: boolean;
+  }[];
 }
