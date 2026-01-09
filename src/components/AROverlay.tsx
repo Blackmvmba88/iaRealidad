@@ -7,6 +7,27 @@ interface Props {
   mode: RepairMode;
 }
 
+// Helper function to get color for pin type
+const getPinColor = (pinType: string): string => {
+  switch (pinType) {
+    case 'VCC':
+      return '#f44336'; // Red
+    case 'GND':
+      return '#000'; // Black
+    case 'DATA':
+      return '#2196F3'; // Blue
+    default:
+      return '#9E9E9E'; // Gray
+  }
+};
+
+// Validation test status
+enum TestStatus {
+  PASS = 'pass',
+  WARNING = 'warning',
+  FAIL = 'fail',
+}
+
 const AROverlay: React.FC<Props> = ({mode}) => {
   // Sample component positions (in a real app, these would come from AR recognition)
   const components = [
@@ -20,6 +41,13 @@ const AROverlay: React.FC<Props> = ({mode}) => {
     {id: 'p2', name: 'GND', x: 160, y: 190, type: 'GND'},
     {id: 'p3', name: 'TX', x: 140, y: 210, type: 'DATA'},
     {id: 'p4', name: 'RX', x: 160, y: 210, type: 'DATA'},
+  ];
+
+  // Validation test results (in real app, these would come from actual tests)
+  const validationResults = [
+    {componentId: '1', status: TestStatus.PASS},
+    {componentId: '2', status: TestStatus.PASS},
+    {componentId: '3', status: TestStatus.WARNING},
   ];
 
   const renderInspectionMode = () => (
@@ -56,13 +84,13 @@ const AROverlay: React.FC<Props> = ({mode}) => {
               cx={pin.x}
               cy={pin.y}
               r="5"
-              fill={pin.type === 'VCC' ? '#f44336' : pin.type === 'GND' ? '#000' : '#2196F3'}
+              fill={getPinColor(pin.type)}
               opacity="0.7"
             />
             <SvgText
               x={pin.x}
               y={pin.y - 10}
-              fill={pin.type === 'VCC' ? '#f44336' : pin.type === 'GND' ? '#000' : '#2196F3'}
+              fill={getPinColor(pin.type)}
               fontSize="10"
               fontWeight="bold"
               textAnchor="middle">
@@ -199,50 +227,70 @@ const AROverlay: React.FC<Props> = ({mode}) => {
     </View>
   );
 
-  const renderValidationMode = () => (
-    <View style={styles.overlayContainer}>
-      <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
-        {/* Show test results */}
-        {components.map((comp, idx) => (
-          <React.Fragment key={comp.id}>
-            <Rect
-              x={comp.x - 20}
-              y={comp.y - 15}
-              width="40"
-              height="30"
-              fill="none"
-              stroke={idx < 2 ? '#4CAF50' : '#FFC107'}
-              strokeWidth="2"
-            />
-            <SvgText
-              x={comp.x + 25}
-              y={comp.y}
-              fill={idx < 2 ? '#4CAF50' : '#FFC107'}
-              fontSize="16"
-              fontWeight="bold">
-              {idx < 2 ? '✓' : '⚠'}
-            </SvgText>
-          </React.Fragment>
-        ))}
-      </Svg>
-      
-      <View style={styles.infoPanel}>
-        <Text style={styles.infoTitle}>Validation Mode</Text>
-        <Text style={[styles.infoText, styles.successText]}>
-          ✓ U1 IC: Power OK
-        </Text>
-        <Text style={[styles.infoText, styles.successText]}>
-          ✓ R1 Resistor: Value correct
-        </Text>
-        <Text style={[styles.infoText, styles.warningText]}>
-          ⚠ C1 Capacitor: Voltage low
-        </Text>
-        <View style={[styles.badge, styles.successBadge]}>
-          <Text style={styles.badgeText}>2/3 Tests Passed</Text>
+  const renderValidationMode = () => {
+    // Helper function to get color and icon for test status
+    const getTestStatusDisplay = (status: TestStatus) => {
+      switch (status) {
+        case TestStatus.PASS:
+          return {color: '#4CAF50', icon: '✓'};
+        case TestStatus.WARNING:
+          return {color: '#FFC107', icon: '⚠'};
+        case TestStatus.FAIL:
+          return {color: '#f44336', icon: '✗'};
+        default:
+          return {color: '#9E9E9E', icon: '?'};
+      }
+    };
+
+    return (
+      <View style={styles.overlayContainer}>
+        <Svg height="100%" width="100%" style={StyleSheet.absoluteFill}>
+          {/* Show test results */}
+          {components.map((comp, idx) => {
+            const result = validationResults[idx];
+            const display = getTestStatusDisplay(result.status);
+            return (
+              <React.Fragment key={comp.id}>
+                <Rect
+                  x={comp.x - 20}
+                  y={comp.y - 15}
+                  width="40"
+                  height="30"
+                  fill="none"
+                  stroke={display.color}
+                  strokeWidth="2"
+                />
+                <SvgText
+                  x={comp.x + 25}
+                  y={comp.y}
+                  fill={display.color}
+                  fontSize="16"
+                  fontWeight="bold">
+                  {display.icon}
+                </SvgText>
+              </React.Fragment>
+            );
+          })}
+        </Svg>
+        
+        <View style={styles.infoPanel}>
+          <Text style={styles.infoTitle}>Validation Mode</Text>
+          <Text style={[styles.infoText, styles.successText]}>
+            ✓ U1 IC: Power OK
+          </Text>
+          <Text style={[styles.infoText, styles.successText]}>
+            ✓ R1 Resistor: Value correct
+          </Text>
+          <Text style={[styles.infoText, styles.warningText]}>
+            ⚠ C1 Capacitor: Voltage low
+          </Text>
+          <View style={[styles.badge, styles.successBadge]}>
+            <Text style={styles.badgeText}>2/3 Tests Passed</Text>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   const renderContent = () => {
     switch (mode) {
