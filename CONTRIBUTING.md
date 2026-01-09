@@ -2,6 +2,8 @@
 
 Thank you for your interest in contributing to the AR Electronics Repair Assistant! This document provides guidelines and instructions for contributing.
 
+> 💡 **Want to contribute but not sure where to start?** Check our [ROADMAP.md](./ROADMAP.md) to see planned features and areas where we need help!
+
 ## How to Contribute
 
 ### Reporting Bugs
@@ -16,8 +18,11 @@ If you find a bug, please create an issue with:
 
 ### Suggesting Features
 
-Feature requests are welcome! Please include:
+Feature requests are welcome! Please check [ROADMAP.md](./ROADMAP.md) first to see if your feature is already planned.
+
+When suggesting features, please include:
 - Clear description of the feature
+- Which ERA it belongs to (I, II, III, or IV)
 - Use case and benefits
 - Mockups or examples if applicable
 - Technical considerations
@@ -110,32 +115,56 @@ Use clear, descriptive commit messages:
 
 ## Areas for Contribution
 
-### High Priority
+> 📋 For a comprehensive view of planned features, see [ROADMAP.md](./ROADMAP.md)
 
-- [ ] Machine learning integration for real component recognition
-- [ ] Improved AR tracking and stability
-- [ ] More component types and modules
-- [ ] Offline mode with cached data
+### ERA I - Current Focus (60% Complete)
+
+**High Priority - Completing AR Base:**
+- [ ] More component types (inductors, diodes, transistors)
+- [ ] Additional module guides (GPS, sensors, displays)
+- [ ] Improved UI/UX and tutorials
+- [ ] Dark mode support
+- [ ] Internationalization (i18n)
 - [ ] Better error handling and user feedback
 
-### Medium Priority
-
+**Medium Priority - ERA I Polish:**
 - [ ] Unit and integration tests
 - [ ] Performance optimizations
 - [ ] Accessibility improvements
-- [ ] Internationalization (i18n)
-- [ ] Dark mode support
+- [ ] Documentation improvements
+- [ ] More usage examples
 
-### Enhancement Ideas
+### ERA II - Future (Perception & Validation)
 
-- [ ] Save and load repair sessions
-- [ ] Export measurements and notes
-- [ ] Integration with component datasheets
+- [ ] Machine learning integration for real component recognition
+- [ ] OCR for component identification
+- [ ] Automatic test point detection
+- [ ] Tolerance validation system
+- [ ] Electronic model library
+
+### ERA III - Future (AI Technical Intelligence)
+
+- [ ] Probabilistic diagnostic system
+- [ ] Firmware generation templates
+- [ ] Intelligent repair suggestions
+- [ ] Compatibility checking engine
+
+### ERA IV - Future (Community & Ecosystem)
+
+- [ ] Cloud-based repair database
 - [ ] Community-shared repair guides
+- [ ] Save and load repair sessions
+- [ ] Integration with component datasheets
+- [ ] Parts ordering integration
+- [ ] Collaborative AR features
+
+### Enhancement Ideas (All Eras)
+
 - [ ] Video recording of repair process
 - [ ] Oscilloscope integration
 - [ ] Schematic diagram overlay
-- [ ] Parts ordering integration
+- [ ] Export measurements and notes
+- [ ] Improved AR tracking and stability
 
 ## Project Structure
 

@@ -2,6 +2,8 @@
 
 A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance.
 
+> 📍 **Current Status**: ERA I - 60% Complete | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
+
 ## Features
 
 ### 🔍 Inspection Mode
@@ -210,16 +212,27 @@ npm test
 yarn test
 ```
 
+## Roadmap
+
+This project follows a structured 4-era development plan:
+- **ERA I** (Current - 60% complete): Instrumentación y Superposición (AR Base)
+- **ERA II** (Planned): Comprensión y Validación (Percepción Técnica)
+- **ERA III** (Planned): Inteligencia de Reparación y Creación (IA Técnica)
+- **ERA IV** (Planned): Ecosistema y Memoria (Red & Comunidad)
+
+See [ROADMAP.md](./ROADMAP.md) for the complete development plan, milestones, and vision.
+
 ## Future Enhancements
 
-- [ ] Machine learning-based component recognition
-- [ ] Real-time oscilloscope integration
-- [ ] Cloud-based repair database
-- [ ] Multi-language support
-- [ ] Save and share repair sessions
-- [ ] Integration with component datasheets
-- [ ] Advanced AR features (depth sensing, object recognition)
-- [ ] Community-contributed repair guides
+See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across all eras, including:
+- Machine learning-based component recognition (ERA II)
+- Real-time oscilloscope integration (ERA II)
+- Cloud-based repair database (ERA IV)
+- Multi-language support (ERA I)
+- Save and share repair sessions (ERA IV)
+- Integration with component datasheets (ERA IV)
+- Advanced AR features (depth sensing, object recognition) (ERA II-III)
+- Community-contributed repair guides (ERA IV)
 
 ## Contributing
 

@@ -3,6 +3,9 @@
 ## 🎯 Vision
 An AR-powered mobile assistant that transforms how people work with electronics, making repair, measurement, and creation accessible through real-time visual guidance.
 
+> 📍 **Development Progress**: Following a structured 4-era roadmap. Currently at **ERA I: 60% Complete**  
+> See [ROADMAP.md](./ROADMAP.md) for the complete development vision and milestones.
+
 ## 🏗️ What We Built
 
 ```
@@ -249,7 +252,9 @@ npm run android  # or npm run ios
 
 ## 🔮 Future Possibilities
 
-### Phase 2 - ML Integration
+For the complete development roadmap and detailed plans, see [ROADMAP.md](./ROADMAP.md).
+
+### Phase 2 - ML Integration (ERA II)
 ```
 Current: Sample data overlays
 Future:  Real-time component recognition
@@ -257,7 +262,7 @@ Future:  Real-time component recognition
     [Camera] → [ML Model] → [Identified Components]
 ```
 
-### Phase 3 - Cloud Features
+### Phase 3 - Cloud Features (ERA IV)
 ```
 Local App ↔ Cloud Database
     ↓           ↓
@@ -265,7 +270,7 @@ Local App ↔ Cloud Database
  Sessions    Shared Repairs
 ```
 
-### Phase 4 - Advanced AR
+### Phase 4 - Advanced AR (ERA III)
 ```
 Basic Overlays → Advanced AR
     ↓               ↓
@@ -280,14 +285,16 @@ SVG Graphics    3D Models
 1. Read QUICKSTART.md (5 min)
 2. Try all 5 modes
 3. Check EXAMPLES.md for scenarios
+4. Review ROADMAP.md to understand the vision
 
 ### For Developers
 1. Read ARCHITECTURE.md (design)
 2. Review src/ code (implementation)
 3. Check CONTRIBUTING.md (guidelines)
+4. Study ROADMAP.md (future features)
 
 ### For Contributors
-1. Pick a feature from issues
+1. Pick a feature from issues or ROADMAP.md
 2. Follow code style
 3. Add tests
 4. Update docs
