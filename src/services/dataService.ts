@@ -7,6 +7,7 @@ import {
   PowerOnChecklist,
   FirmwareStub,
 } from '../types';
+import {firmwareGeneratorService} from './firmwareGeneratorService';
 
 // Sample components that would be recognized in AR
 export const sampleComponents: Component[] = [
@@ -505,6 +506,68 @@ export const powerOnChecklist: PowerOnChecklist = {
   ],
 };
 
+// Guide for adding ESP32 WiFi/Bluetooth module
+export const esp32ModuleGuide: ModuleGuide = {
+  id: 'mod_esp32',
+  moduleName: 'ESP32 DevKit',
+  moduleType: 'WiFi',
+  pinConnections: [
+    {modulePin: '3V3', boardPin: '3.3V', pinType: 'VCC'},
+    {modulePin: 'GND', boardPin: 'GND', pinType: 'GND'},
+    {modulePin: 'TX', boardPin: 'RX (GPIO)', pinType: 'TX'},
+    {modulePin: 'RX', boardPin: 'TX (GPIO)', pinType: 'RX'},
+    {modulePin: 'GPIO2', boardPin: 'LED/Sensor', pinType: 'GPIO'},
+  ],
+  connectionSteps: [
+    {
+      id: 'esp32s1',
+      order: 1,
+      title: 'Check Power Requirements',
+      description: 'ESP32 requires 3.3V with at least 500mA current',
+      componentIds: [],
+      type: 'inspect',
+      warning: 'Do NOT connect GPIO directly to 5V - will damage module!',
+    },
+    {
+      id: 'esp32s2',
+      order: 2,
+      title: 'Connect Power',
+      description: 'Wire 3.3V and GND pins securely',
+      componentIds: [],
+      type: 'solder',
+      expectedResult: 'Blue LED on ESP32 should light up',
+    },
+    {
+      id: 'esp32s3',
+      order: 3,
+      title: 'Connect Serial Interface',
+      description: 'Connect TX/RX for programming and debugging',
+      componentIds: [],
+      type: 'solder',
+    },
+  ],
+  testingSteps: [
+    {
+      id: 'esp32t1',
+      order: 1,
+      title: 'Power Test',
+      description: 'Verify ESP32 powers on and LED is visible',
+      componentIds: [],
+      type: 'test',
+      expectedResult: 'Power LED on, no smoke or overheating',
+    },
+    {
+      id: 'esp32t2',
+      order: 2,
+      title: 'Upload Test Firmware',
+      description: 'Upload blink sketch to verify programming works',
+      componentIds: [],
+      type: 'test',
+      expectedResult: 'LED blinks every second',
+    },
+  ],
+};
+
 export const getSampleDataForMode = (mode: string) => {
   switch (mode) {
     case 'inspection':
@@ -520,7 +583,12 @@ export const getSampleDataForMode = (mode: string) => {
       return {
         bluetoothGuide: bluetoothModuleGuide,
         wifiGuide: wifiModuleGuide,
+        esp32Guide: esp32ModuleGuide,
         firmwareStub: hc05FirmwareStub,
+        esp32WiFiFirmware: firmwareGeneratorService.generateESP32WiFiFirmware(),
+        esp32BluetoothFirmware:
+          firmwareGeneratorService.generateESP32BluetoothFirmware(),
+        esp8266Firmware: firmwareGeneratorService.generateESP8266WiFiFirmware(),
       };
     case 'validation':
       return {validationTests};

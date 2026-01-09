@@ -131,10 +131,25 @@ iaRealidad/
 │   │   ├── HomeScreen.tsx  # Landing page with mode selection
 │   │   └── ARCameraScreen.tsx # AR camera view
 │   ├── services/            # Business logic and data
-│   │   └── dataService.ts  # Sample data for different modes
+│   │   ├── dataService.ts  # Sample data for different modes
+│   │   ├── storageService.ts # AsyncStorage integration for persistence
+│   │   └── firmwareGeneratorService.ts # Firmware code generation
+│   ├── config/              # Configuration files
+│   │   └── boardConfigurations.ts # Board-specific configs and test points
+│   ├── i18n/                # Internationalization
+│   │   ├── index.ts        # i18n service and hooks
+│   │   ├── types.ts        # Translation type definitions
+│   │   ├── en.ts           # English translations
+│   │   └── es.ts           # Spanish translations
 │   ├── types/               # TypeScript type definitions
 │   │   └── index.ts        # Common types and interfaces
 │   └── App.tsx              # Main app component
+├── __tests__/               # Unit tests
+│   ├── boardConfigurations.test.ts
+│   ├── firmwareGeneratorService.test.ts
+│   ├── i18n.test.ts
+│   ├── dataService.test.ts
+│   └── storageService.test.ts
 ├── android/                 # Android native code
 ├── ios/                     # iOS native code
 ├── index.js                 # App entry point
@@ -186,6 +201,55 @@ Best for: Testing after repair/modification
 
 ## Development
 
+### Board Configurations
+
+The app now supports multiple board types with predefined configurations. Board configurations define:
+- Component layouts and test points
+- Expected voltage/resistance values
+- Tolerance ranges for measurements
+- Power requirements
+
+Available board configurations:
+- Arduino Uno R3
+- ESP32 DevKit V1
+- ESP8266 NodeMCU V3
+
+To add a new board configuration, edit `src/config/boardConfigurations.ts`.
+
+### Firmware Generation
+
+The app includes a firmware generator service that creates ready-to-use code for:
+- **ESP32 WiFi**: Basic WiFi connection with web server
+- **ESP32 Bluetooth**: Bluetooth Serial communication
+- **ESP32 Combined**: WiFi + Bluetooth integration
+- **ESP8266 WiFi**: Basic WiFi for ESP8266 modules
+
+Access firmware generators via `src/services/firmwareGeneratorService.ts`.
+
+### Internationalization (i18n)
+
+The app supports multiple languages through a built-in i18n system:
+- **Supported Languages**: English, Spanish
+- **Usage**: Import `useTranslation` hook from `src/i18n`
+- **Adding Translations**: Edit `src/i18n/en.ts` and `src/i18n/es.ts`
+
+Example usage:
+```typescript
+import {useTranslation} from '../i18n';
+
+const {t} = useTranslation();
+const title = t('home.title'); // Returns translated text
+```
+
+### Data Persistence
+
+The app uses AsyncStorage for persistent local data storage:
+- Measurement logs
+- Validation results
+- User settings
+
+All data is automatically saved and restored between sessions. See `src/services/storageService.ts`.
+
 ### Adding New Components
 Edit `src/services/dataService.ts` to add new component definitions, measurement points, or module guides.
 
@@ -228,11 +292,37 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 - Machine learning-based component recognition (ERA II)
 - Real-time oscilloscope integration (ERA II)
 - Cloud-based repair database (ERA IV)
-- Multi-language support (ERA I)
+- ✅ **Multi-language support** (ERA I - Completed: English, Spanish)
 - Save and share repair sessions (ERA IV)
 - Integration with component datasheets (ERA IV)
 - Advanced AR features (depth sensing, object recognition) (ERA II-III)
 - Community-contributed repair guides (ERA IV)
+
+### Recently Added Features
+
+#### Board Configuration System
+- Pre-configured settings for popular development boards
+- Arduino Uno R3, ESP32 DevKit, ESP8266 NodeMCU
+- Automatic tolerance calculations
+- Board-specific measurement points
+
+#### Firmware Generator
+- Auto-generate firmware for ESP32 and ESP8266
+- WiFi and Bluetooth templates
+- Customizable with SSID, passwords, and device names
+- Ready-to-upload code with instructions
+
+#### Internationalization (i18n)
+- Full Spanish and English support
+- Easy language switching
+- Type-safe translation keys
+- Extensible for additional languages
+
+#### Enhanced Data Persistence
+- AsyncStorage integration for local data
+- Automatic save/restore of measurements
+- Settings persistence
+- Export/import functionality
 
 ## Contributing
 

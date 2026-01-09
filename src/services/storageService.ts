@@ -1,28 +1,89 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MeasurementLog, ValidationResult} from '../types';
+import {Locale} from '../i18n';
+
+const MEASUREMENT_LOGS_KEY = '@iaRealidad:measurementLogs';
+const VALIDATION_RESULTS_KEY = '@iaRealidad:validationResults';
+const SETTINGS_KEY = '@iaRealidad:settings';
+
+/**
+ * User settings interface
+ */
+export interface UserSettings {
+  language?: Locale;
+  theme?: 'light' | 'dark';
+  units?: 'metric' | 'imperial';
+  notifications?: boolean;
+  boardType?: string;
+}
 
 /**
  * Storage service for measurement logs and validation results
- * In production, this would use AsyncStorage or a database
- * For now, we use in-memory storage for demonstration
+ * Uses AsyncStorage for persistent local storage
  */
 class StorageService {
   private measurementLogs: MeasurementLog[] = [];
   private validationResults: ValidationResult[] = [];
+  private initialized: boolean = false;
+
+  /**
+   * Initialize storage and load existing data
+   */
+  async initialize(): Promise<void> {
+    if (this.initialized) {
+      return;
+    }
+
+    try {
+      // Load measurement logs
+      const logsData = await AsyncStorage.getItem(MEASUREMENT_LOGS_KEY);
+      if (logsData) {
+        this.measurementLogs = JSON.parse(logsData);
+      }
+
+      // Load validation results
+      const resultsData = await AsyncStorage.getItem(VALIDATION_RESULTS_KEY);
+      if (resultsData) {
+        this.validationResults = JSON.parse(resultsData);
+      }
+
+      this.initialized = true;
+    } catch (error) {
+      console.error('Failed to initialize storage:', error);
+    }
+  }
+
+  /**
+   * Ensure storage is initialized before operations
+   */
+  private async ensureInitialized(): Promise<void> {
+    if (!this.initialized) {
+      await this.initialize();
+    }
+  }
 
   /**
    * Save a measurement log entry
    */
   async saveMeasurementLog(log: MeasurementLog): Promise<void> {
+    await this.ensureInitialized();
     this.measurementLogs.push(log);
-    // In production: await AsyncStorage.setItem(MEASUREMENT_LOGS_KEY, JSON.stringify(this.measurementLogs));
+    try {
+      await AsyncStorage.setItem(
+        MEASUREMENT_LOGS_KEY,
+        JSON.stringify(this.measurementLogs),
+      );
+    } catch (error) {
+      console.error('Failed to save measurement log:', error);
+      throw error;
+    }
   }
 
   /**
    * Get all measurement logs
    */
   async getMeasurementLogs(): Promise<MeasurementLog[]> {
-    // In production: const data = await AsyncStorage.getItem(MEASUREMENT_LOGS_KEY);
-    // return data ? JSON.parse(data) : [];
+    await this.ensureInitialized();
     return [...this.measurementLogs];
   }
 
@@ -32,6 +93,7 @@ class StorageService {
   async getMeasurementLogsByComponent(
     componentId: string,
   ): Promise<MeasurementLog[]> {
+    await this.ensureInitialized();
     return this.measurementLogs.filter(log => log.componentId === componentId);
   }
 
@@ -42,6 +104,7 @@ class StorageService {
     startDate: string,
     endDate: string,
   ): Promise<MeasurementLog[]> {
+    await this.ensureInitialized();
     return this.measurementLogs.filter(
       log => log.timestamp >= startDate && log.timestamp <= endDate,
     );
@@ -51,16 +114,24 @@ class StorageService {
    * Save a validation result
    */
   async saveValidationResult(result: ValidationResult): Promise<void> {
+    await this.ensureInitialized();
     this.validationResults.push(result);
-    // In production: await AsyncStorage.setItem(VALIDATION_RESULTS_KEY, JSON.stringify(this.validationResults));
+    try {
+      await AsyncStorage.setItem(
+        VALIDATION_RESULTS_KEY,
+        JSON.stringify(this.validationResults),
+      );
+    } catch (error) {
+      console.error('Failed to save validation result:', error);
+      throw error;
+    }
   }
 
   /**
    * Get all validation results
    */
   async getValidationResults(): Promise<ValidationResult[]> {
-    // In production: const data = await AsyncStorage.getItem(VALIDATION_RESULTS_KEY);
-    // return data ? JSON.parse(data) : [];
+    await this.ensureInitialized();
     return [...this.validationResults];
   }
 
@@ -70,6 +141,7 @@ class StorageService {
   async getValidationResultsByTest(
     testId: string,
   ): Promise<ValidationResult[]> {
+    await this.ensureInitialized();
     return this.validationResults.filter(result => result.testId === testId);
   }
 
@@ -79,6 +151,7 @@ class StorageService {
   async getRecentValidationResults(
     limit: number = 10,
   ): Promise<ValidationResult[]> {
+    await this.ensureInitialized();
     return this.validationResults
       .sort(
         (a, b) =>
@@ -96,6 +169,7 @@ class StorageService {
     failedTests: number;
     passRate: number;
   }> {
+    await this.ensureInitialized();
     const totalTests = this.validationResults.length;
     const passedTests = this.validationResults.filter(
       result => result.passed,
@@ -116,7 +190,11 @@ class StorageService {
    */
   async clearMeasurementLogs(): Promise<void> {
     this.measurementLogs = [];
-    // In production: await AsyncStorage.removeItem(MEASUREMENT_LOGS_KEY);
+    try {
+      await AsyncStorage.removeItem(MEASUREMENT_LOGS_KEY);
+    } catch (error) {
+      console.error('Failed to clear measurement logs:', error);
+    }
   }
 
   /**
@@ -124,7 +202,11 @@ class StorageService {
    */
   async clearValidationResults(): Promise<void> {
     this.validationResults = [];
-    // In production: await AsyncStorage.removeItem(VALIDATION_RESULTS_KEY);
+    try {
+      await AsyncStorage.removeItem(VALIDATION_RESULTS_KEY);
+    } catch (error) {
+      console.error('Failed to clear validation results:', error);
+    }
   }
 
   /**
@@ -139,6 +221,7 @@ class StorageService {
    * Export logs as JSON string
    */
   async exportLogs(): Promise<string> {
+    await this.ensureInitialized();
     return JSON.stringify(
       {
         measurementLogs: this.measurementLogs,
@@ -158,12 +241,45 @@ class StorageService {
       const data = JSON.parse(jsonData);
       if (data.measurementLogs) {
         this.measurementLogs = data.measurementLogs;
+        await AsyncStorage.setItem(
+          MEASUREMENT_LOGS_KEY,
+          JSON.stringify(this.measurementLogs),
+        );
       }
       if (data.validationResults) {
         this.validationResults = data.validationResults;
+        await AsyncStorage.setItem(
+          VALIDATION_RESULTS_KEY,
+          JSON.stringify(this.validationResults),
+        );
       }
     } catch (error) {
       throw new Error('Invalid import data format');
+    }
+  }
+
+  /**
+   * Save user settings
+   */
+  async saveSettings(settings: UserSettings): Promise<void> {
+    try {
+      await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get user settings
+   */
+  async getSettings(): Promise<UserSettings> {
+    try {
+      const data = await AsyncStorage.getItem(SETTINGS_KEY);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error('Failed to load settings:', error);
+      return {};
     }
   }
 }
