@@ -6,11 +6,20 @@ import {FirmwareStub} from '../types';
 export class FirmwareGeneratorService {
   /**
    * Generate ESP32 WiFi basic firmware
+   * @param ssid WiFi network name
+   * @param password WiFi password
+   * @returns FirmwareStub with complete Arduino code
+   * @security WARNING: WiFi credentials are embedded in plain text. For production,
+   *           consider using WiFiManager library with captive portal for secure credential input.
    */
   generateESP32WiFiFirmware(
     ssid: string = 'YOUR_SSID',
     password: string = 'YOUR_PASSWORD',
   ): FirmwareStub {
+    // Sanitize inputs to prevent code injection
+    const safeSsid = ssid.replace(/['"\\]/g, '');
+    const safePassword = password.replace(/['"\\]/g, '');
+
     return {
       id: 'fw_esp32_wifi_basic',
       moduleName: 'ESP32 WiFi Module',
@@ -21,14 +30,18 @@ export class FirmwareGeneratorService {
  * Board: ESP32 Dev Module
  * 
  * This firmware connects ESP32 to WiFi and provides basic web server functionality
+ * 
+ * SECURITY WARNING: WiFi credentials are stored in plain text in this sketch.
+ * For production use, consider using WiFiManager library with captive portal
+ * to securely configure credentials without hardcoding them.
  */
 
 #include <WiFi.h>
 #include <WebServer.h>
 
 // WiFi credentials
-const char* ssid = "${ssid}";
-const char* password = "${password}";
+const char* ssid = "${safeSsid}";
+const char* password = "${safePassword}";
 
 // Web server on port 80
 WebServer server(80);
@@ -164,10 +177,17 @@ void handleNotFound() {
 
   /**
    * Generate ESP32 Bluetooth firmware
+   * @param deviceName Bluetooth device name (max 32 characters)
+   * @returns FirmwareStub with Bluetooth Serial code
    */
   generateESP32BluetoothFirmware(
     deviceName: string = 'ESP32_BT',
   ): FirmwareStub {
+    // Sanitize device name: max 32 chars, alphanumeric + underscore/hyphen
+    const safeDeviceName = deviceName
+      .replace(/[^a-zA-Z0-9_-]/g, '_')
+      .substring(0, 32);
+
     return {
       id: 'fw_esp32_bt_serial',
       moduleName: 'ESP32 Bluetooth Serial',
@@ -191,7 +211,7 @@ void handleNotFound() {
 BluetoothSerial SerialBT;
 
 // Device name
-String deviceName = "${deviceName}";
+String deviceName = "${safeDeviceName}";
 
 void setup() {
   // Initialize serial communication
@@ -266,12 +286,23 @@ void loop() {
 
   /**
    * Generate ESP32 combined WiFi + Bluetooth firmware
+   * @param ssid WiFi network name
+   * @param password WiFi password
+   * @param btName Bluetooth device name
+   * @returns FirmwareStub with combined WiFi and Bluetooth code
+   * @security WARNING: Credentials are embedded in plain text. For production,
+   *           use secure credential storage or WiFiManager library.
    */
   generateESP32CombinedFirmware(
     ssid: string = 'YOUR_SSID',
     password: string = 'YOUR_PASSWORD',
     btName: string = 'ESP32_Device',
   ): FirmwareStub {
+    // Sanitize inputs
+    const safeSsid = ssid.replace(/['"\\]/g, '');
+    const safePassword = password.replace(/['"\\]/g, '');
+    const safeBtName = btName.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 32);
+
     return {
       id: 'fw_esp32_combined',
       moduleName: 'ESP32 WiFi + Bluetooth',
@@ -282,6 +313,9 @@ void loop() {
  * Board: ESP32 Dev Module
  * 
  * This firmware enables both WiFi and Bluetooth on ESP32
+ * 
+ * SECURITY WARNING: Credentials are stored in plain text.
+ * For production, consider using WiFiManager or secure storage.
  */
 
 #include <WiFi.h>
@@ -289,11 +323,11 @@ void loop() {
 #include "BluetoothSerial.h"
 
 // WiFi credentials
-const char* ssid = "${ssid}";
-const char* password = "${password}";
+const char* ssid = "${safeSsid}";
+const char* password = "${safePassword}";
 
 // Bluetooth device name
-String btDeviceName = "${btName}";
+String btDeviceName = "${safeBtName}";
 
 // Web server and Bluetooth Serial
 WebServer server(80);
@@ -419,11 +453,19 @@ void loop() {
 
   /**
    * Generate ESP8266 WiFi firmware
+   * @param ssid WiFi network name
+   * @param password WiFi password
+   * @returns FirmwareStub with ESP8266 WiFi code
+   * @security WARNING: Credentials are embedded in plain text.
    */
   generateESP8266WiFiFirmware(
     ssid: string = 'YOUR_SSID',
     password: string = 'YOUR_PASSWORD',
   ): FirmwareStub {
+    // Sanitize inputs
+    const safeSsid = ssid.replace(/['"\\]/g, '');
+    const safePassword = password.replace(/['"\\]/g, '');
+
     return {
       id: 'fw_esp8266_wifi',
       moduleName: 'ESP8266 WiFi Module',
@@ -434,13 +476,15 @@ void loop() {
  * Board: NodeMCU 1.0 (ESP-12E Module)
  * 
  * This firmware connects ESP8266 to WiFi
+ * 
+ * SECURITY WARNING: Credentials are stored in plain text.
  */
 
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 
-const char* ssid = "${ssid}";
-const char* password = "${password}";
+const char* ssid = "${safeSsid}";
+const char* password = "${safePassword}";
 
 ESP8266WebServer server(80);
 

@@ -1,9 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MeasurementLog, ValidationResult} from '../types';
+import {Locale} from '../i18n';
 
 const MEASUREMENT_LOGS_KEY = '@iaRealidad:measurementLogs';
 const VALIDATION_RESULTS_KEY = '@iaRealidad:validationResults';
 const SETTINGS_KEY = '@iaRealidad:settings';
+
+/**
+ * User settings interface
+ */
+export interface UserSettings {
+  language?: Locale;
+  theme?: 'light' | 'dark';
+  units?: 'metric' | 'imperial';
+  notifications?: boolean;
+  boardType?: string;
+}
 
 /**
  * Storage service for measurement logs and validation results
@@ -249,7 +261,7 @@ class StorageService {
   /**
    * Save user settings
    */
-  async saveSettings(settings: Record<string, any>): Promise<void> {
+  async saveSettings(settings: UserSettings): Promise<void> {
     try {
       await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
     } catch (error) {
@@ -261,7 +273,7 @@ class StorageService {
   /**
    * Get user settings
    */
-  async getSettings(): Promise<Record<string, any>> {
+  async getSettings(): Promise<UserSettings> {
     try {
       const data = await AsyncStorage.getItem(SETTINGS_KEY);
       return data ? JSON.parse(data) : {};
