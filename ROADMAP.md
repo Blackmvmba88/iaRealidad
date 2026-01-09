@@ -183,7 +183,7 @@ La app empieza a "entender" y validar lo que sucede.
 
 Esta era es donde nace la semántica electrónica.
 
-**Estado**: 0% Completa → Objetivo: Inicio Q2 2026
+**Estado**: 0% Completa → Objetivo: Q2-Q3 2026 (con overlap en Q3)
 
 ---
 
@@ -245,7 +245,7 @@ La app ayuda a tomar decisiones técnicas complejas.
 
 Esta era es donde nace el ingeniero digital.
 
-**Estado**: 0% Completa → Objetivo: Inicio Q3 2026
+**Estado**: 0% Completa → Objetivo: Q3-Q4 2026 (inicio en Q3 con overlap)
 
 ---
 
@@ -327,7 +327,7 @@ La app aprende del mundo para enseñar al mundo.
 
 Aquí es donde nace la civilización del conocimiento embebido.
 
-**Estado**: 0% Completa → Objetivo: Q4 2026 - Q1 2027
+**Estado**: 0% Completa → Objetivo: Q1-Q2 2027
 
 ---
 
@@ -341,6 +341,8 @@ Aquí es donde nace la civilización del conocimiento embebido.
 2027 Q1  ░░░░░░░░░░░░░░░░░░░░  ERA IV (50%)
 2027 Q2  ░░░░░░░░░░░░░░░░░░░░  ERA IV (100%)
 ```
+
+**Nota sobre el desarrollo**: Las eras pueden tener overlap intencional. Por ejemplo, en Q3 2026 completamos ERA II mientras iniciamos ERA III. Esto permite un desarrollo ágil donde las features avanzadas pueden comenzar mientras se refinan las anteriores.
 
 ---
 
