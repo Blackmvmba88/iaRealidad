@@ -1,10 +1,11 @@
 import {
   Component,
-  Pin,
   MeasurementPoint,
   RepairStep,
   ModuleGuide,
   ValidationTest,
+  PowerOnChecklist,
+  FirmwareStub,
 } from '../types';
 
 // Sample components that would be recognized in AR
@@ -12,14 +13,59 @@ export const sampleComponents: Component[] = [
   {
     id: 'u1',
     name: 'ATmega328P',
-    type: 'ic',
+    type: 'microcontroller',
     position: {x: 150, y: 200},
     description: 'Main microcontroller IC',
     pins: [
-      {id: 'u1_p1', name: 'VCC', type: 'VCC', position: {x: 140, y: 190}, voltage: 5},
-      {id: 'u1_p2', name: 'GND', type: 'GND', position: {x: 160, y: 190}, voltage: 0},
+      {
+        id: 'u1_p1',
+        name: 'VCC',
+        type: 'VCC',
+        position: {x: 140, y: 190},
+        voltage: 5,
+      },
+      {
+        id: 'u1_p2',
+        name: 'GND',
+        type: 'GND',
+        position: {x: 160, y: 190},
+        voltage: 0,
+      },
       {id: 'u1_p3', name: 'TX', type: 'DATA', position: {x: 140, y: 210}},
       {id: 'u1_p4', name: 'RX', type: 'DATA', position: {x: 160, y: 210}},
+      {id: 'u1_p5', name: 'D2', type: 'IO', position: {x: 140, y: 230}},
+      {id: 'u1_p6', name: 'D3', type: 'IO', position: {x: 160, y: 230}},
+    ],
+  },
+  {
+    id: 'reg1',
+    name: 'LM7805',
+    type: 'regulator',
+    position: {x: 80, y: 150},
+    description: '5V voltage regulator',
+    value: '5V/1A',
+    pins: [
+      {
+        id: 'reg1_p1',
+        name: 'VIN',
+        type: 'VIN',
+        position: {x: 60, y: 150},
+        voltage: 12,
+      },
+      {
+        id: 'reg1_p2',
+        name: 'GND',
+        type: 'GND',
+        position: {x: 80, y: 150},
+        voltage: 0,
+      },
+      {
+        id: 'reg1_p3',
+        name: 'VOUT',
+        type: 'VOUT',
+        position: {x: 100, y: 150},
+        voltage: 5,
+      },
     ],
   },
   {
@@ -50,6 +96,7 @@ export const measurementPoints: MeasurementPoint[] = [
     expectedRange: {min: 4.75, max: 5.25},
     unit: 'V',
     description: 'Measure VCC voltage at microcontroller',
+    measurementType: 'voltage',
   },
   {
     id: 'm2',
@@ -59,6 +106,7 @@ export const measurementPoints: MeasurementPoint[] = [
     expectedRange: {min: -0.1, max: 0.1},
     unit: 'V',
     description: 'Verify ground connection',
+    measurementType: 'voltage',
   },
   {
     id: 'm3',
@@ -67,6 +115,37 @@ export const measurementPoints: MeasurementPoint[] = [
     expectedRange: {min: 9500, max: 10500},
     unit: 'Ω',
     description: 'Measure resistor value',
+    measurementType: 'resistance',
+  },
+  {
+    id: 'm4',
+    componentId: 'reg1',
+    pinId: 'reg1_p1',
+    expectedValue: '7-12V',
+    expectedRange: {min: 7, max: 12},
+    unit: 'V',
+    description: 'Measure regulator input voltage (VIN)',
+    measurementType: 'voltage',
+  },
+  {
+    id: 'm5',
+    componentId: 'reg1',
+    pinId: 'reg1_p3',
+    expectedValue: '5V',
+    expectedRange: {min: 4.75, max: 5.25},
+    unit: 'V',
+    description: 'Measure regulator output voltage (VOUT)',
+    measurementType: 'voltage',
+  },
+  {
+    id: 'm6',
+    componentId: 'u1',
+    pinId: 'u1_p2',
+    expectedValue: 'Connected',
+    expectedRange: {min: 0, max: 10},
+    unit: 'continuity',
+    description: 'Continuity test: GND to regulator GND',
+    measurementType: 'continuity',
   },
 ];
 
@@ -76,7 +155,8 @@ export const repairSteps: RepairStep[] = [
     id: 'rs1',
     order: 1,
     title: 'Visual Inspection',
-    description: 'Check for burned components, broken traces, or cold solder joints',
+    description:
+      'Check for burned components, broken traces, or cold solder joints',
     componentIds: ['u1', 'r1', 'c1'],
     type: 'inspect',
     warning: 'Disconnect power before inspection',
@@ -103,7 +183,8 @@ export const repairSteps: RepairStep[] = [
     id: 'rs4',
     order: 4,
     title: 'Solder New Component',
-    description: 'Carefully solder new capacitor, check polarity if electrolytic',
+    description:
+      'Carefully solder new capacitor, check polarity if electrolytic',
     componentIds: ['c1'],
     type: 'solder',
     warning: 'Set iron to 350°C, avoid overheating',
@@ -243,6 +324,80 @@ export const wifiModuleGuide: ModuleGuide = {
   ],
 };
 
+// Firmware stub generation for HC-05 Bluetooth Module
+export const hc05FirmwareStub: FirmwareStub = {
+  id: 'fw_hc05_1',
+  moduleName: 'HC-05 Bluetooth',
+  moduleType: 'Bluetooth',
+  platform: 'arduino',
+  code: `// HC-05 Bluetooth Module - Arduino Code
+// Connections:
+// HC-05 VCC  -> Arduino 5V (or 3.3V depending on module)
+// HC-05 GND  -> Arduino GND
+// HC-05 TX   -> Arduino RX (Pin 0) or SoftwareSerial RX
+// HC-05 RX   -> Arduino TX (Pin 1) or SoftwareSerial TX (via voltage divider)
+
+#include <SoftwareSerial.h>
+
+// Define pins for software serial (recommended to protect hardware serial)
+#define BT_RX_PIN 10  // Connect to HC-05 TX
+#define BT_TX_PIN 11  // Connect to HC-05 RX (via voltage divider)
+
+// Create software serial object
+SoftwareSerial bluetoothSerial(BT_RX_PIN, BT_TX_PIN);
+
+void setup() {
+  // Initialize hardware serial for debugging
+  Serial.begin(9600);
+  Serial.println("HC-05 Bluetooth Module Initialized");
+  
+  // Initialize bluetooth serial
+  bluetoothSerial.begin(9600);  // HC-05 default baud rate is 9600 or 38400
+  
+  Serial.println("Bluetooth ready. Waiting for connections...");
+}
+
+void loop() {
+  // Check if data received from Bluetooth
+  if (bluetoothSerial.available()) {
+    char received = bluetoothSerial.read();
+    Serial.print("Bluetooth received: ");
+    Serial.println(received);
+    
+    // Echo back to Bluetooth
+    bluetoothSerial.print("Echo: ");
+    bluetoothSerial.println(received);
+  }
+  
+  // Check if data received from Serial Monitor
+  if (Serial.available()) {
+    char sent = Serial.read();
+    bluetoothSerial.write(sent);
+  }
+}
+
+// AT Command Mode Configuration (optional)
+// To enter AT mode, connect HC-05 EN/KEY pin to 3.3V before power-up
+// Then use 38400 baud rate for AT commands:
+// AT - Test command (should respond "OK")
+// AT+NAME=MyDevice - Set device name
+// AT+PSWD=1234 - Set pairing password
+// AT+UART=9600,0,0 - Set baud rate`,
+  dependencies: ['SoftwareSerial (built-in Arduino library)'],
+  instructions: [
+    'Install Arduino IDE if not already installed',
+    'Select your Arduino board from Tools > Board menu',
+    'Select the correct COM port from Tools > Port menu',
+    'Copy the code to Arduino IDE',
+    'Adjust BT_RX_PIN and BT_TX_PIN if using different pins',
+    'Click Upload to flash the code to your Arduino',
+    'Open Serial Monitor (Tools > Serial Monitor) at 9600 baud',
+    'Pair your phone/computer with HC-05 (default PIN: 1234)',
+    'Use a Bluetooth serial app to send/receive data',
+    'IMPORTANT: Use voltage divider (1kΩ and 2kΩ) for HC-05 RX pin if using 5V Arduino',
+  ],
+};
+
 // Validation tests
 export const validationTests: ValidationTest[] = [
   {
@@ -280,20 +435,92 @@ export const validationTests: ValidationTest[] = [
       'Test with oscilloscope',
     ],
   },
+  {
+    id: 'vt4',
+    name: 'Regulator Voltage Check',
+    description: 'Verify voltage regulator is functioning correctly',
+    measurementPoints: [measurementPoints[3], measurementPoints[4]],
+    passCriteria: 'VIN: 7-12V, VOUT: 5V ±5%',
+    failureActions: [
+      'Check input voltage source',
+      'Verify regulator is not overheating',
+      'Replace regulator if output is incorrect',
+      'Check for short circuit on output',
+    ],
+  },
 ];
+
+// Power-on checklist for systematic startup verification
+export const powerOnChecklist: PowerOnChecklist = {
+  id: 'poc1',
+  name: 'Basic Power-On Checklist',
+  description: 'Systematic verification before powering on the circuit',
+  steps: [
+    {
+      id: 'poc1_s1',
+      order: 1,
+      description:
+        'Visual inspection: Check for reversed components, solder bridges, or damaged parts',
+      checkType: 'visual',
+    },
+    {
+      id: 'poc1_s2',
+      order: 2,
+      description: 'Continuity test: Verify GND connections across the board',
+      checkType: 'continuity',
+    },
+    {
+      id: 'poc1_s3',
+      order: 3,
+      description:
+        'Continuity test: Check for shorts between VCC and GND (should be open)',
+      checkType: 'continuity',
+    },
+    {
+      id: 'poc1_s4',
+      order: 4,
+      description:
+        'Measurement: Verify regulator input voltage (VIN) is within range (7-12V)',
+      checkType: 'measurement',
+    },
+    {
+      id: 'poc1_s5',
+      order: 5,
+      description:
+        'Measurement: Check regulator output voltage (VOUT) is 5V ±5%',
+      checkType: 'measurement',
+    },
+    {
+      id: 'poc1_s6',
+      order: 6,
+      description: 'Measurement: Verify microcontroller VCC is stable at 5V',
+      checkType: 'measurement',
+    },
+    {
+      id: 'poc1_s7',
+      order: 7,
+      description: 'Visual inspection: Verify no components are overheating',
+      checkType: 'visual',
+    },
+  ],
+};
 
 export const getSampleDataForMode = (mode: string) => {
   switch (mode) {
     case 'inspection':
       return {components: sampleComponents};
     case 'measurement':
-      return {measurementPoints};
+      return {
+        measurementPoints,
+        powerOnChecklist,
+      };
     case 'repair':
       return {repairSteps};
     case 'creation':
       return {
         bluetoothGuide: bluetoothModuleGuide,
         wifiGuide: wifiModuleGuide,
+        firmwareStub: hc05FirmwareStub,
       };
     case 'validation':
       return {validationTests};

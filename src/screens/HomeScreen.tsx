@@ -29,19 +29,22 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
     {
       mode: 'inspection',
       title: 'Inspection',
-      description: 'Identify components, pins, and connections on circuit boards',
+      description:
+        'Identify components, pins, and connections on circuit boards',
       icon: '🔍',
     },
     {
       mode: 'measurement',
       title: 'Measurement',
-      description: 'Guide multimeter probing with expected voltage/resistance ranges',
+      description:
+        'Guide multimeter probing with expected voltage/resistance ranges',
       icon: '📊',
     },
     {
       mode: 'repair',
       title: 'Repair',
-      description: 'Step-by-step repair instructions with component highlighting',
+      description:
+        'Step-by-step repair instructions with component highlighting',
       icon: '🔧',
     },
     {
@@ -101,9 +104,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
           <Text style={styles.featureItem}>
             • Pin highlighting (VCC, GND, GPIO, etc.)
           </Text>
-          <Text style={styles.featureItem}>
-            • Multimeter probing guidance
-          </Text>
+          <Text style={styles.featureItem}>• Multimeter probing guidance</Text>
           <Text style={styles.featureItem}>
             • Module installation instructions
           </Text>

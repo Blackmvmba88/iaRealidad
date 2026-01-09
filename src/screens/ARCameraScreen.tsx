@@ -1,13 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Dimensions,
-  Platform,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {
   Camera,
   useCameraDevice,
@@ -87,11 +79,11 @@ const ARCameraScreen: React.FC<Props> = ({navigation}) => {
         isActive={isActive}
         photo={true}
       />
-      
+
       <AROverlay mode={currentMode} />
-      
+
       <ModeSelector currentMode={currentMode} onModeChange={handleModeChange} />
-      
+
       <View style={styles.controls}>
         <TouchableOpacity
           style={styles.backButton}
