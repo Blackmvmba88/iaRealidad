@@ -3,7 +3,6 @@
  */
 
 import {sensingService} from '../src/services/sensingService';
-import {SensorType} from '../src/types';
 
 describe('SensingService', () => {
   beforeEach(() => {
@@ -105,7 +104,7 @@ describe('SensingService', () => {
     it('should get sensors by type', () => {
       // Clear first to ensure isolation
       sensingService.clearAll();
-      
+
       sensingService.initializeSensor('audio');
       sensingService.initializeSensor('temperature');
       sensingService.initializeSensor('audio');
@@ -129,7 +128,8 @@ describe('SensingService', () => {
       sensingService.startSession('measurement');
 
       // Wait a bit
-      const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+      const wait = (ms: number) =>
+        new Promise(resolve => setTimeout(resolve, ms));
       return wait(100).then(() => {
         const session = sensingService.stopSession();
         expect(session).toBeDefined();
@@ -197,10 +197,10 @@ describe('SensingService', () => {
 
       const measurement = sensingService.recordMeasurement(sensor!.id, 100); // Too high
 
-      const anomalies = sensingService.detectAnomalies(
-        [measurement],
-        {min: 20, max: 30},
-      );
+      const anomalies = sensingService.detectAnomalies([measurement], {
+        min: 20,
+        max: 30,
+      });
 
       expect(anomalies.length).toBe(1);
       expect(anomalies[0].anomalyType).toBe('out_of_range');
@@ -213,10 +213,10 @@ describe('SensingService', () => {
 
       const measurement = sensingService.recordMeasurement(sensor!.id, 25);
 
-      const anomalies = sensingService.detectAnomalies(
-        [measurement],
-        {min: 20, max: 30},
-      );
+      const anomalies = sensingService.detectAnomalies([measurement], {
+        min: 20,
+        max: 30,
+      });
 
       expect(anomalies.length).toBe(0);
     });
@@ -227,10 +227,10 @@ describe('SensingService', () => {
 
       // Critical deviation (>50%)
       const measurement1 = sensingService.recordMeasurement(sensor!.id, 200);
-      const anomalies1 = sensingService.detectAnomalies(
-        [measurement1],
-        {min: 20, max: 30},
-      );
+      const anomalies1 = sensingService.detectAnomalies([measurement1], {
+        min: 20,
+        max: 30,
+      });
       expect(anomalies1[0].severity).toBe('critical');
 
       // Clear measurements for next test
@@ -239,10 +239,10 @@ describe('SensingService', () => {
 
       // Medium deviation (~15%)
       const measurement2 = sensingService.recordMeasurement(sensor2!.id, 35);
-      const anomalies2 = sensingService.detectAnomalies(
-        [measurement2],
-        {min: 20, max: 30},
-      );
+      const anomalies2 = sensingService.detectAnomalies([measurement2], {
+        min: 20,
+        max: 30,
+      });
       expect(anomalies2[0].severity).toBe('medium');
     });
   });
@@ -291,7 +291,10 @@ describe('SensingService', () => {
 
     it('should detect static noise', () => {
       // Generate data that will definitely trigger static (high amplitude)
-      const audioData = Array.from({length: 100}, () => Math.random() * 0.95 + 0.05);
+      const audioData = Array.from(
+        {length: 100},
+        () => Math.random() * 0.95 + 0.05,
+      );
       const analysis = sensingService.analyzeAudioNoise(audioData);
 
       // With high amplitude random data, it should detect static or clicking
@@ -308,7 +311,9 @@ describe('SensingService', () => {
     });
 
     it('should simulate sensor reading for bluetooth multimeter', () => {
-      const reading = sensingService.simulateSensorReading('bluetooth_multimeter');
+      const reading = sensingService.simulateSensorReading(
+        'bluetooth_multimeter',
+      );
       expect(typeof reading).toBe('number');
       expect(reading).toBeGreaterThanOrEqual(4.75);
       expect(reading).toBeLessThanOrEqual(5.25);

@@ -1,9 +1,9 @@
 /**
  * ERA II: Sensing Service
- * 
+ *
  * This service provides comprehensive sensing capabilities for iaRealidad,
  * enabling the app to "listen" to the physical world through various sensors.
- * 
+ *
  * Features:
  * - Passive sensing: Audio, microphone, temperature, visual topology
  * - Active sensing: Bluetooth multimeters, UART, I2C, SPI
@@ -89,7 +89,11 @@ class SensingService {
       type: 'audio',
       status: 'disconnected',
       lastUpdated: new Date().toISOString(),
-      capabilities: ['noise_detection', 'frequency_analysis', 'pattern_recognition'],
+      capabilities: [
+        'noise_detection',
+        'frequency_analysis',
+        'pattern_recognition',
+      ],
       frequency: 0,
       amplitude: 0,
       signalQuality: 0,
@@ -120,7 +124,11 @@ class SensingService {
       type: 'temperature',
       status: 'disconnected',
       lastUpdated: new Date().toISOString(),
-      capabilities: ['temperature_monitoring', 'trend_analysis', 'threshold_alerts'],
+      capabilities: [
+        'temperature_monitoring',
+        'trend_analysis',
+        'threshold_alerts',
+      ],
       currentTemp: 25, // Default room temperature
       threshold: {
         warning: 70,
@@ -207,7 +215,11 @@ class SensingService {
       type: 'visual_topology',
       status: 'disconnected',
       lastUpdated: new Date().toISOString(),
-      capabilities: ['component_detection', 'trace_mapping', 'topology_analysis'],
+      capabilities: [
+        'component_detection',
+        'trace_mapping',
+        'topology_analysis',
+      ],
       detectedComponents: [],
       tracesDetected: [],
       confidenceLevel: 0,
@@ -396,10 +408,7 @@ class SensingService {
             timestamp: measurement.timestamp,
             sensorId: measurement.sensorId,
             anomalyType: 'out_of_range',
-            severity: this.calculateSeverity(
-              measurement.value,
-              expectedRange,
-            ),
+            severity: this.calculateSeverity(measurement.value, expectedRange),
             description: `Value ${measurement.value} is outside expected range [${expectedRange.min}, ${expectedRange.max}]`,
             suggestedActions: [
               'Verify sensor calibration',
@@ -430,9 +439,15 @@ class SensingService {
         ? ((range.min - value) / range.min) * 100
         : ((value - range.max) / range.max) * 100;
 
-    if (deviation > 50) return 'critical';
-    if (deviation > 25) return 'high';
-    if (deviation > 10) return 'medium';
+    if (deviation > 50) {
+      return 'critical';
+    }
+    if (deviation > 25) {
+      return 'high';
+    }
+    if (deviation > 10) {
+      return 'medium';
+    }
     return 'low';
   }
 
@@ -501,12 +516,13 @@ class SensingService {
     // Simplified audio analysis (in real implementation, use FFT)
     const avgAmplitude =
       audioData.reduce((sum, val) => sum + Math.abs(val), 0) / audioData.length;
-    
+
     // Detect dominant frequency (simplified)
     const dominantFreq = this.detectDominantFrequency(audioData);
-    
+
     // Classify noise pattern
-    let pattern: 'humming' | 'clicking' | 'buzzing' | 'static' | 'clean' = 'clean';
+    let pattern: 'humming' | 'clicking' | 'buzzing' | 'static' | 'clean' =
+      'clean';
     if (dominantFreq > 100 && dominantFreq < 200) {
       pattern = 'humming'; // Likely 50/60 Hz mains hum
     } else if (avgAmplitude > 0.7) {
@@ -533,20 +549,21 @@ class SensingService {
   private detectDominantFrequency(audioData: number[]): number {
     // Simplified frequency detection
     // In real implementation, use FFT (Fast Fourier Transform)
-    let maxCrossings = 0;
     let crossings = 0;
-    
+
     for (let i = 1; i < audioData.length; i++) {
-      if ((audioData[i] >= 0 && audioData[i - 1] < 0) ||
-          (audioData[i] < 0 && audioData[i - 1] >= 0)) {
+      if (
+        (audioData[i] >= 0 && audioData[i - 1] < 0) ||
+        (audioData[i] < 0 && audioData[i - 1] >= 0)
+      ) {
         crossings++;
       }
     }
-    
+
     // Estimate frequency from zero crossings
     const sampleRate = 44100; // Assuming 44.1 kHz sample rate
     const frequency = (crossings / 2) * (sampleRate / audioData.length);
-    
+
     return Math.round(frequency);
   }
 
@@ -564,7 +581,7 @@ class SensingService {
    */
   simulateSensorReading(
     sensorType: SensorType,
-    componentId?: string,
+    _componentId?: string,
   ): number | string {
     switch (sensorType) {
       case 'temperature':
