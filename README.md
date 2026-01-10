@@ -2,7 +2,7 @@
 
 A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance.
 
-> 📍 **Current Status**: ERA I - 60% Complete | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
+> 📍 **Current Status**: ERA I - 60% Complete | ERA II - 40% Complete | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
 
 ## Features
 
@@ -44,6 +44,29 @@ A cross-platform AR (Augmented Reality) assistant for electronics repair, measur
 - Voltage verification at multiple points
 - Pass/fail indicators for each test
 - Troubleshooting guidance for failures
+
+### 🎧 Sensing Mode (ERA II - NEW!) 🔥
+**The app now "listens" to and understands the physical world!**
+
+#### Passive Sensing (Entrada Pasiva)
+- **Audio Analysis**: Detects electrical noise patterns (humming, buzzing, static)
+- **Microphone**: Captures mechanical clicks from relays and switches
+- **Temperature**: Monitors component heat in real-time
+- **Visual Topology**: Recognizes circuit traces and connections
+
+#### Active Hardware Integration (Entrada Activa)
+- **Bluetooth Multimeters**: Real-time voltage, current, resistance readings
+- **UART Debug**: Serial communication monitoring and logging
+- **I2C Sensors**: External sensor integration
+- **SPI Sensors**: High-speed data acquisition
+
+#### Intelligence
+- **Anomaly Detection**: Automatically detects out-of-range values
+- **Pattern Recognition**: Identifies noise patterns and mechanical sounds
+- **Session Tracking**: Records and analyzes measurement sessions
+- **Smart Alerts**: Provides severity-based warnings
+
+📚 **See [ERA_II_SENSING_GUIDE.md](./ERA_II_SENSING_GUIDE.md) for complete sensing capabilities documentation**
 
 ## Technology Stack
 
