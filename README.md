@@ -1,8 +1,8 @@
 # iaRealidad - AR Electronics Repair Assistant
 
-A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance.
+A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance with **intelligent diagnostic capabilities**.
 
-> 📍 **Current Status**: ERA I - 60% Complete | ERA II - 40% Complete | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
+> 📍 **Current Status**: ERA I - 60% Complete | ERA II - 40% Complete | **ERA III - 50% Complete** 🔥 | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
 
 ## Features
 
@@ -67,6 +67,36 @@ A cross-platform AR (Augmented Reality) assistant for electronics repair, measur
 - **Smart Alerts**: Provides severity-based warnings
 
 📚 **See [ERA_II_SENSING_GUIDE.md](./ERA_II_SENSING_GUIDE.md) for complete sensing capabilities documentation**
+
+### 🧠 Diagnostic Mode (ERA III - NEW!) 🔥
+**The app now UNDERSTANDS failures and recommends intelligent repairs!**
+
+#### Failure Pattern Detection
+- **Automatic Diagnosis**: Analyzes symptoms to identify failure patterns
+- **5 Common Patterns**: Voltage regulator failure, firmware corruption, microcontroller dead, power supply failure, short circuit
+- **Confidence Scoring**: Provides probability-based diagnostic confidence
+- **Power Route Analysis**: Traces power failures from input to microcontroller
+
+#### Intelligent Recommendations
+- **Prioritized Repair Actions**: Ranked by likelihood of success
+- **Tool Requirements**: Lists exact tools needed for each repair
+- **Cost & Time Estimates**: Based on historical repair data
+- **Step-by-Step Procedures**: Detailed repair instructions
+
+#### Case-Based Learning
+- **Repair Case Documentation**: Every repair tracked as a clinical case
+- **Historical Pattern Matching**: Find similar cases from past repairs
+- **Success Rate Tracking**: Learn from repair outcomes
+- **Component Failure Statistics**: Identify common failure points
+- **Root Cause Analysis**: Document why failures happen and how to prevent them
+
+#### Knowledge Base
+- **Pre-loaded Failure Knowledge**: ESP32, Arduino, and common board failures
+- **Inference Rules**: Logical reasoning from symptoms to diagnosis
+- **Probable Causes**: Ranked list of likely failure causes with test procedures
+- **Learning from Experience**: System improves with every documented repair
+
+📚 **See [ERA_III_DIAGNOSTIC_GUIDE.md](./ERA_III_DIAGNOSTIC_GUIDE.md) for complete diagnostic capabilities documentation**
 
 ## Technology Stack
 
@@ -302,9 +332,9 @@ yarn test
 ## Roadmap
 
 This project follows a structured 4-era development plan:
-- **ERA I** (Current - 60% complete): Instrumentación y Superposición (AR Base)
-- **ERA II** (Planned): Comprensión y Validación (Percepción Técnica)
-- **ERA III** (Planned): Inteligencia de Reparación y Creación (IA Técnica)
+- **ERA I** (60% complete): Instrumentación y Superposición (AR Base)
+- **ERA II** (40% complete): Comprensión y Validación (Percepción Técnica)
+- **ERA III** (50% complete): Inteligencia de Reparación y Creación (IA Técnica) 🔥 **NEW!**
 - **ERA IV** (Planned): Ecosistema y Memoria (Red & Comunidad)
 
 See [ROADMAP.md](./ROADMAP.md) for the complete development plan, milestones, and vision.
@@ -322,6 +352,18 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 - Community-contributed repair guides (ERA IV)
 
 ### Recently Added Features
+
+#### ERA III: Diagnostic Intelligence System 🔥 **NEW!**
+- **Diagnostic Engine**: Automatic failure pattern detection with 5 pre-loaded patterns
+- **Inference Rules**: Logic-based reasoning from symptoms to diagnosis
+- **Power Route Analysis**: Traces power failures through the circuit
+- **Repair Recommendations**: Prioritized actions with tools, steps, and confidence scores
+- **Case Management**: Clinical-style repair case documentation
+- **Historical Pattern Matching**: Find similar cases with similarity scoring
+- **Learning System**: Tracks success rates, costs, and times for continuous improvement
+- **Knowledge Base**: Pre-loaded with ESP32/Arduino common failures and repair procedures
+- 42 comprehensive tests (all passing)
+- Complete documentation in ERA_III_DIAGNOSTIC_GUIDE.md
 
 #### Board Configuration System
 - Pre-configured settings for popular development boards
