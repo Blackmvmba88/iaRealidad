@@ -359,3 +359,248 @@ export interface SPIDevice {
   chipSelect: number;
   type?: string;
 }
+
+// ==================== ERA III: DIAGNOSTIC & INTELLIGENCE TYPES ====================
+
+// Failure Pattern Types
+export type FailurePattern =
+  | 'no_power'
+  | 'voltage_regulator_failure'
+  | 'microcontroller_dead'
+  | 'communication_failure'
+  | 'short_circuit'
+  | 'open_circuit'
+  | 'component_overheating'
+  | 'firmware_corruption'
+  | 'bootloader_failure'
+  | 'power_supply_failure'
+  | 'unknown';
+
+// Symptom Type
+export interface Symptom {
+  id: string;
+  type: 'no_voltage' | 'low_voltage' | 'high_voltage' | 'no_communication' | 
+        'overheating' | 'noise' | 'intermittent' | 'physical_damage';
+  componentId?: string;
+  pinId?: string;
+  measuredValue?: number;
+  expectedValue?: number;
+  unit?: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+}
+
+// Diagnostic Result
+export interface DiagnosticResult {
+  id: string;
+  timestamp: string;
+  symptoms: Symptom[];
+  failurePattern: FailurePattern;
+  confidence: number; // 0-100
+  probableCauses: ProbableCause[];
+  affectedComponents: string[];
+  powerRouteAnalysis?: PowerRouteAnalysis;
+  recommendations: RepairRecommendation[];
+  estimatedDifficulty: 'easy' | 'medium' | 'hard' | 'expert';
+  estimatedTime: number; // minutes
+  estimatedCost: number; // USD
+}
+
+// Probable Cause
+export interface ProbableCause {
+  id: string;
+  description: string;
+  componentId?: string;
+  probability: number; // 0-100
+  reasoning: string;
+  testProcedure?: string;
+  relatedCases?: string[]; // Reference to similar cases
+}
+
+// Power Route Analysis
+export interface PowerRouteAnalysis {
+  inputVoltage: {present: boolean; value?: number; expected: number};
+  regulatorStatus: {working: boolean; componentId?: string; outputVoltage?: number};
+  microcontrollerPower: {present: boolean; value?: number; expected: number};
+  suspectedFailurePoint?: string; // Component ID
+  routeIntegrity: 'good' | 'degraded' | 'broken';
+  recommendations: string[];
+}
+
+// Repair Recommendation
+export interface RepairRecommendation {
+  id: string;
+  priority: number; // 1 = highest
+  action: 'measure' | 'replace' | 'reflow' | 'clean' | 'test' | 'reprogram';
+  description: string;
+  componentId?: string;
+  tools: string[];
+  steps: string[];
+  warnings?: string[];
+  expectedOutcome: string;
+  confidence: number; // 0-100
+}
+
+// Repair Case (Clinical Electronic Case)
+export interface RepairCase {
+  id: string;
+  caseNumber: number;
+  timestamp: string;
+  boardType: string;
+  boardId?: string;
+  
+  // Symptoms and Diagnosis
+  symptoms: Symptom[];
+  failurePattern: FailurePattern;
+  diagnosticResult: DiagnosticResult;
+  
+  // Repair Process
+  repairSteps: RepairStep[];
+  replacedComponents?: ComponentReplacement[];
+  
+  // Validation
+  validationTest?: ValidationTest;
+  validationResult?: ValidationResult;
+  repairSuccess: boolean;
+  
+  // Metadata
+  estimatedCost: number; // USD
+  actualCost?: number; // USD
+  estimatedTime: number; // minutes
+  actualTime?: number; // minutes
+  technicianNotes?: string;
+  
+  // Learning Data
+  rootCause?: string;
+  preventiveMeasures?: string[];
+  clientSource?: string; // e.g., "cheap power supply"
+  futureRiskProbability?: number; // 0-100
+  
+  // Tags for search
+  tags?: string[];
+}
+
+// Component Replacement Record
+export interface ComponentReplacement {
+  id: string;
+  componentId: string;
+  componentType: string;
+  oldValue?: string;
+  newValue?: string;
+  reason: string;
+  cost: number; // USD
+}
+
+// Failure Knowledge Base Entry
+export interface FailureKnowledge {
+  id: string;
+  failurePattern: FailurePattern;
+  commonSymptoms: string[];
+  typicalCauses: string[];
+  diagnosticSteps: string[];
+  repairProcedures: string[];
+  requiredTools: string[];
+  estimatedCost: {min: number; max: number}; // USD
+  estimatedTime: {min: number; max: number}; // minutes
+  successRate: number; // 0-100
+  difficulty: 'easy' | 'medium' | 'hard' | 'expert';
+  relatedCaseIds: string[];
+}
+
+// Component Failure Statistics
+export interface ComponentFailureStats {
+  componentType: string;
+  totalFailures: number;
+  failureRate: number; // percentage
+  commonFailureModes: string[];
+  averageLifetime?: number; // hours
+  typicalCost: number; // USD
+  replacementDifficulty: 'easy' | 'medium' | 'hard';
+}
+
+// Inference Rule
+export interface InferenceRule {
+  id: string;
+  name: string;
+  conditions: {
+    symptomType: string;
+    componentState?: string;
+    measurementRange?: {min?: number; max?: number};
+  }[];
+  conclusion: {
+    failurePattern: FailurePattern;
+    confidence: number;
+    reasoning: string;
+  };
+  priority: number;
+}
+
+// Historical Pattern Match
+export interface HistoricalPatternMatch {
+  caseId: string;
+  caseNumber: number;
+  similarity: number; // 0-100
+  matchingSymptoms: string[];
+  boardType: string;
+  repairSuccess: boolean;
+  resolution: string;
+  cost: number;
+  timeToRepair: number;
+}
+
+// ==================== ERA IV PREVIEW: ECOSYSTEM TYPES ====================
+
+// Repair Network - Community & Cloud
+export interface RepairNetwork {
+  id: string;
+  userId?: string;
+  cases: RepairCase[];
+  sharedCases: number;
+  reputation?: number;
+  contributions: number;
+}
+
+// Playbook (Repair Procedure Template)
+export interface Playbook {
+  id: string;
+  name: string;
+  description: string;
+  boardTypes: string[];
+  failurePatterns: FailurePattern[];
+  steps: RepairStep[];
+  estimatedTime: number;
+  difficulty: 'easy' | 'medium' | 'hard' | 'expert';
+  successRate: number;
+  timesUsed: number;
+  rating?: number;
+  author?: string;
+  verified: boolean;
+  tags: string[];
+}
+
+// Waveform Analysis (for oscilloscope integration)
+export interface WaveformAnalysis {
+  id: string;
+  timestamp: string;
+  signalType: 'digital' | 'analog' | 'pwm' | 'serial';
+  
+  // Time domain
+  frequency?: number; // Hz
+  dutyCycle?: number; // percentage for PWM
+  amplitude?: {min: number; max: number; unit: string};
+  
+  // Quality metrics
+  jitter?: number; // ns
+  ripple?: number; // mV
+  overshoot?: number; // percentage
+  ringing?: boolean;
+  
+  // Serial protocols
+  baudRate?: number;
+  protocol?: 'UART' | 'I2C' | 'SPI' | 'CAN';
+  errors?: number;
+  
+  quality: 'good' | 'acceptable' | 'poor' | 'critical';
+  issues?: string[];
+  recommendations?: string[];
+}
