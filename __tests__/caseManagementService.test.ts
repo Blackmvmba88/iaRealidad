@@ -61,7 +61,12 @@ describe('CaseManagementService', () => {
 
     it('should auto-increment case numbers', () => {
       const symptoms: Symptom[] = [
-        {id: 'symptom_1', type: 'no_voltage', description: 'Problem', severity: 'high'},
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Problem',
+          severity: 'high',
+        },
       ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
@@ -77,9 +82,21 @@ describe('CaseManagementService', () => {
         estimatedCost: 0.5,
       };
 
-      const case1 = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
-      const case2 = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
-      const case3 = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const case1 = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
+      const case2 = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
+      const case3 = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
 
       expect(case1.caseNumber).toBe(1);
       expect(case2.caseNumber).toBe(2);
@@ -115,7 +132,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('Arduino Uno', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'Arduino Uno',
+        symptoms,
+        diagnosticResult,
+      );
 
       expect(repairCase.tags).toContain('arduino uno');
       expect(repairCase.tags).toContain('voltage_regulator_failure');
@@ -127,12 +148,14 @@ describe('CaseManagementService', () => {
 
   describe('getCase', () => {
     it('should retrieve a case by ID', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -147,7 +170,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 0.5,
       };
 
-      const created = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const created = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
       const retrieved = caseManagementService.getCase(created.id);
 
       expect(retrieved).toBeDefined();
@@ -162,12 +189,14 @@ describe('CaseManagementService', () => {
 
   describe('getCaseByNumber', () => {
     it('should retrieve a case by case number', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -182,8 +211,14 @@ describe('CaseManagementService', () => {
         estimatedCost: 0.5,
       };
 
-      const created = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
-      const retrieved = caseManagementService.getCaseByNumber(created.caseNumber);
+      const created = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
+      const retrieved = caseManagementService.getCaseByNumber(
+        created.caseNumber,
+      );
 
       expect(retrieved).toBeDefined();
       expect(retrieved?.caseNumber).toBe(created.caseNumber);
@@ -192,12 +227,14 @@ describe('CaseManagementService', () => {
 
   describe('addRepairStep', () => {
     it('should add repair steps to a case', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -212,7 +249,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
 
       const step: RepairStep = {
         id: 'step_1',
@@ -234,12 +275,14 @@ describe('CaseManagementService', () => {
 
   describe('recordComponentReplacement', () => {
     it('should record component replacements', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -254,7 +297,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
 
       const replacement: ComponentReplacement = {
         id: 'replace_1',
@@ -276,12 +323,14 @@ describe('CaseManagementService', () => {
     });
 
     it('should accumulate costs for multiple replacements', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -296,7 +345,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
 
       caseManagementService.recordComponentReplacement(repairCase.id, {
         id: 'replace_1',
@@ -322,12 +375,14 @@ describe('CaseManagementService', () => {
 
   describe('completeCase', () => {
     it('should complete a case with validation results', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -342,7 +397,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
 
       const validationTest: ValidationTest = {
         id: 'test_1',
@@ -381,12 +440,14 @@ describe('CaseManagementService', () => {
 
   describe('addLearningData', () => {
     it('should add learning metadata to a case', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -401,7 +462,11 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
 
       const success = caseManagementService.addLearningData(
         repairCase.id,
@@ -414,7 +479,9 @@ describe('CaseManagementService', () => {
       const updated = caseManagementService.getCase(repairCase.id);
 
       expect(success).toBe(true);
-      expect(updated?.rootCause).toBe('Cheap power supply caused voltage spike');
+      expect(updated?.rootCause).toBe(
+        'Cheap power supply caused voltage spike',
+      );
       expect(updated?.preventiveMeasures?.length).toBe(2);
       expect(updated?.clientSource).toBe('Aliexpress cheap PSU');
       expect(updated?.futureRiskProbability).toBe(92);
@@ -423,12 +490,14 @@ describe('CaseManagementService', () => {
 
   describe('searchByBoardType', () => {
     it('should find cases by board type', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
         timestamp: new Date().toISOString(),
@@ -443,9 +512,21 @@ describe('CaseManagementService', () => {
         estimatedCost: 0.5,
       };
 
-      caseManagementService.createCase('ESP32 DevKit V1', symptoms, diagnosticResult);
-      caseManagementService.createCase('ESP32 WROOM', symptoms, diagnosticResult);
-      caseManagementService.createCase('Arduino Uno', symptoms, diagnosticResult);
+      caseManagementService.createCase(
+        'ESP32 DevKit V1',
+        symptoms,
+        diagnosticResult,
+      );
+      caseManagementService.createCase(
+        'ESP32 WROOM',
+        symptoms,
+        diagnosticResult,
+      );
+      caseManagementService.createCase(
+        'Arduino Uno',
+        symptoms,
+        diagnosticResult,
+      );
 
       const esp32Cases = caseManagementService.searchByBoardType('ESP32');
 
@@ -455,12 +536,14 @@ describe('CaseManagementService', () => {
 
   describe('searchByFailurePattern', () => {
     it('should find cases by failure pattern', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
 
       const diagnosticResult1: DiagnosticResult = {
         id: 'diag_1',
@@ -486,7 +569,9 @@ describe('CaseManagementService', () => {
       caseManagementService.createCase('ESP32', symptoms, diagnosticResult1);
       caseManagementService.createCase('ESP32', symptoms, diagnosticResult2);
 
-      const regulatorCases = caseManagementService.searchByFailurePattern('voltage_regulator_failure');
+      const regulatorCases = caseManagementService.searchByFailurePattern(
+        'voltage_regulator_failure',
+      );
 
       expect(regulatorCases.length).toBe(2);
     });
@@ -495,8 +580,18 @@ describe('CaseManagementService', () => {
   describe('findSimilarCases', () => {
     it('should find similar cases with high similarity score', () => {
       const symptoms: Symptom[] = [
-        {id: 'symptom_1', type: 'no_voltage', description: 'No 3.3V', severity: 'critical'},
-        {id: 'symptom_2', type: 'overheating', description: 'Hot regulator', severity: 'high'},
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'No 3.3V',
+          severity: 'critical',
+        },
+        {
+          id: 'symptom_2',
+          type: 'overheating',
+          description: 'Hot regulator',
+          severity: 'high',
+        },
       ];
 
       const diagnosticResult: DiagnosticResult = {
@@ -514,22 +609,31 @@ describe('CaseManagementService', () => {
       };
 
       // Create existing case
-      caseManagementService.createCase('ESP32 DevKit', symptoms, diagnosticResult);
+      caseManagementService.createCase(
+        'ESP32 DevKit',
+        symptoms,
+        diagnosticResult,
+      );
 
       // Search for similar case
-      const similarCases = caseManagementService.findSimilarCases('ESP32 DevKit', symptoms);
+      const similarCases = caseManagementService.findSimilarCases(
+        'ESP32 DevKit',
+        symptoms,
+      );
 
       expect(similarCases.length).toBeGreaterThan(0);
       expect(similarCases[0].similarity).toBeGreaterThan(80);
     });
 
     it('should limit results to specified number', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
 
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
@@ -550,7 +654,11 @@ describe('CaseManagementService', () => {
         caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
       }
 
-      const similarCases = caseManagementService.findSimilarCases('ESP32', symptoms, 3);
+      const similarCases = caseManagementService.findSimilarCases(
+        'ESP32',
+        symptoms,
+        3,
+      );
 
       expect(similarCases.length).toBeLessThanOrEqual(3);
     });
@@ -558,12 +666,14 @@ describe('CaseManagementService', () => {
 
   describe('Statistics', () => {
     it('should calculate success rate for failure pattern', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
 
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
@@ -590,47 +700,51 @@ describe('CaseManagementService', () => {
 
       // Create 3 successful and 1 failed repair
       for (let i = 0; i < 3; i++) {
-        const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
-        caseManagementService.completeCase(
-          repairCase.id,
-          validationTest,
-          {
-            id: 'result_1',
-            timestamp: new Date().toISOString(),
-            testId: 'test_1',
-            testName: 'Test',
-            passed: true,
-            results: [],
-          },
+        const repairCase = caseManagementService.createCase(
+          'ESP32',
+          symptoms,
+          diagnosticResult,
         );
-      }
-
-      const failedCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
-      caseManagementService.completeCase(
-        failedCase.id,
-        validationTest,
-        {
-          id: 'result_2',
+        caseManagementService.completeCase(repairCase.id, validationTest, {
+          id: 'result_1',
           timestamp: new Date().toISOString(),
           testId: 'test_1',
           testName: 'Test',
-          passed: false,
+          passed: true,
           results: [],
-        },
-      );
+        });
+      }
 
-      const successRate = caseManagementService.getSuccessRateForPattern('voltage_regulator_failure');
+      const failedCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
+      caseManagementService.completeCase(failedCase.id, validationTest, {
+        id: 'result_2',
+        timestamp: new Date().toISOString(),
+        testId: 'test_1',
+        testName: 'Test',
+        passed: false,
+        results: [],
+      });
+
+      const successRate = caseManagementService.getSuccessRateForPattern(
+        'voltage_regulator_failure',
+      );
 
       expect(successRate).toBe(75); // 3 out of 4
     });
 
     it('should get most common failures', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
 
       const createCaseWithPattern = (pattern: any) => {
         const diagnosticResult: DiagnosticResult = {
@@ -668,12 +782,14 @@ describe('CaseManagementService', () => {
 
   describe('Import/Export', () => {
     it('should export case as JSON', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
 
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
@@ -689,23 +805,29 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const repairCase = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const repairCase = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
       const exported = caseManagementService.exportCase(repairCase.id);
 
       expect(exported).toBeDefined();
       expect(typeof exported).toBe('string');
-      
+
       const parsed = JSON.parse(exported!);
       expect(parsed.id).toBe(repairCase.id);
     });
 
     it('should import case from JSON', () => {
-      const symptoms: Symptom[] = [{
-        id: 'symptom_1',
-        type: 'no_voltage',
-        description: 'Test',
-        severity: 'high',
-      }];
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
 
       const diagnosticResult: DiagnosticResult = {
         id: 'diag_1',
@@ -721,11 +843,15 @@ describe('CaseManagementService', () => {
         estimatedCost: 1.5,
       };
 
-      const original = caseManagementService.createCase('ESP32', symptoms, diagnosticResult);
+      const original = caseManagementService.createCase(
+        'ESP32',
+        symptoms,
+        diagnosticResult,
+      );
       const exported = caseManagementService.exportCase(original.id)!;
-      
+
       caseManagementService.clearAllCases();
-      
+
       const imported = caseManagementService.importCase(exported);
 
       expect(imported).toBeDefined();

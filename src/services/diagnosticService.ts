@@ -28,7 +28,8 @@ import {
 
 class DiagnosticService {
   private inferenceRules: InferenceRule[] = [];
-  private failureKnowledgeBase: Map<FailurePattern, FailureKnowledge> = new Map();
+  private failureKnowledgeBase: Map<FailurePattern, FailureKnowledge> =
+    new Map();
   private diagnosticIdCounter: number = 0;
 
   constructor() {
@@ -56,7 +57,8 @@ class DiagnosticService {
         conclusion: {
           failurePattern: 'voltage_regulator_failure',
           confidence: 85,
-          reasoning: 'No 3.3V output typically indicates AMS1117 or similar regulator failure',
+          reasoning:
+            'No 3.3V output typically indicates AMS1117 or similar regulator failure',
         },
         priority: 1,
       },
@@ -73,7 +75,8 @@ class DiagnosticService {
         conclusion: {
           failurePattern: 'voltage_regulator_failure',
           confidence: 75,
-          reasoning: 'Low 3.3V output suggests degraded or failing voltage regulator',
+          reasoning:
+            'Low 3.3V output suggests degraded or failing voltage regulator',
         },
         priority: 2,
       },
@@ -89,7 +92,8 @@ class DiagnosticService {
         conclusion: {
           failurePattern: 'firmware_corruption',
           confidence: 70,
-          reasoning: 'UART not responding with proper power suggests firmware corruption or bootloader failure',
+          reasoning:
+            'UART not responding with proper power suggests firmware corruption or bootloader failure',
         },
         priority: 3,
       },
@@ -105,7 +109,8 @@ class DiagnosticService {
         conclusion: {
           failurePattern: 'short_circuit',
           confidence: 80,
-          reasoning: 'Component heating with no load indicates short circuit or damaged component',
+          reasoning:
+            'Component heating with no load indicates short circuit or damaged component',
         },
         priority: 1,
       },
@@ -121,7 +126,8 @@ class DiagnosticService {
         conclusion: {
           failurePattern: 'microcontroller_dead',
           confidence: 65,
-          reasoning: 'Power present but no boot suggests dead microcontroller or corrupt firmware',
+          reasoning:
+            'Power present but no boot suggests dead microcontroller or corrupt firmware',
         },
         priority: 4,
       },
@@ -163,8 +169,13 @@ class DiagnosticService {
         'Check for board damage',
         'Test with known good power supply',
       ],
-      requiredTools: ['Soldering iron', 'Multimeter', 'Hot air station (optional)', 'Flux'],
-      estimatedCost: {min: 0.50, max: 2.00},
+      requiredTools: [
+        'Soldering iron',
+        'Multimeter',
+        'Hot air station (optional)',
+        'Flux',
+      ],
+      estimatedCost: {min: 0.5, max: 2.0},
       estimatedTime: {min: 15, max: 45},
       successRate: 92,
       difficulty: 'medium',
@@ -240,7 +251,7 @@ class DiagnosticService {
         'Consider board replacement if BGA package',
       ],
       requiredTools: ['Multimeter', 'Hot air station', 'Programmer/Debugger'],
-      estimatedCost: {min: 2.00, max: 15.00},
+      estimatedCost: {min: 2.0, max: 15.0},
       estimatedTime: {min: 30, max: 120},
       successRate: 60,
       difficulty: 'hard',
@@ -278,7 +289,7 @@ class DiagnosticService {
         'Check for shorts before powering',
       ],
       requiredTools: ['Multimeter', 'Soldering iron', 'Known-good USB cable'],
-      estimatedCost: {min: 0, max: 3.00},
+      estimatedCost: {min: 0, max: 3.0},
       estimatedTime: {min: 5, max: 30},
       successRate: 90,
       difficulty: 'easy',
@@ -293,37 +304,44 @@ class DiagnosticService {
    */
   diagnose(symptoms: Symptom[]): DiagnosticResult {
     const diagnosticId = `diag_${Date.now()}_${this.diagnosticIdCounter++}`;
-    
+
     // Apply inference rules
     const matchedRules = this.applyInferenceRules(symptoms);
-    
+
     // Determine failure pattern
     const failurePattern = this.determineFailurePattern(symptoms, matchedRules);
-    
+
     // Calculate confidence
-    const confidence = this.calculateConfidence(symptoms, failurePattern, matchedRules);
-    
+    const confidence = this.calculateConfidence(
+      symptoms,
+      failurePattern,
+      matchedRules,
+    );
+
     // Identify probable causes
-    const probableCauses = this.identifyProbableCauses(failurePattern, symptoms);
-    
+    const probableCauses = this.identifyProbableCauses(
+      failurePattern,
+      symptoms,
+    );
+
     // Analyze power route if relevant
     const powerRouteAnalysis = this.analyzePowerRoute(symptoms);
-    
+
     // Generate recommendations
     const recommendations = this.generateRecommendations(
       failurePattern,
       symptoms,
       probableCauses,
     );
-    
+
     // Get affected components
     const affectedComponents = symptoms
       .map(s => s.componentId)
       .filter((id): id is string => id !== undefined);
-    
+
     // Estimate difficulty, time, and cost
     const knowledge = this.failureKnowledgeBase.get(failurePattern);
-    
+
     return {
       id: diagnosticId,
       timestamp: new Date().toISOString(),
@@ -345,20 +363,23 @@ class DiagnosticService {
    */
   private applyInferenceRules(symptoms: Symptom[]): InferenceRule[] {
     const matchedRules: InferenceRule[] = [];
-    
+
     for (const rule of this.inferenceRules) {
       let matches = true;
-      
+
       for (const condition of rule.conditions) {
         const hasMatchingSymptom = symptoms.some(symptom => {
           if (symptom.type !== condition.symptomType) {
             return false;
           }
-          
-          if (condition.measurementRange && symptom.measuredValue !== undefined) {
+
+          if (
+            condition.measurementRange &&
+            symptom.measuredValue !== undefined
+          ) {
             const value = symptom.measuredValue;
             const range = condition.measurementRange;
-            
+
             if (range.min !== undefined && value < range.min) {
               return false;
             }
@@ -366,21 +387,21 @@ class DiagnosticService {
               return false;
             }
           }
-          
+
           return true;
         });
-        
+
         if (!hasMatchingSymptom) {
           matches = false;
           break;
         }
       }
-      
+
       if (matches) {
         matchedRules.push(rule);
       }
     }
-    
+
     // Sort by priority
     return matchedRules.sort((a, b) => a.priority - b.priority);
   }
@@ -395,13 +416,17 @@ class DiagnosticService {
     if (matchedRules.length > 0) {
       return matchedRules[0].conclusion.failurePattern;
     }
-    
+
     // Fallback: analyze symptoms directly
-    const severeCritical = symptoms.filter(s => s.severity === 'critical').length;
+    const severeCritical = symptoms.filter(
+      s => s.severity === 'critical',
+    ).length;
     const hasNoVoltage = symptoms.some(s => s.type === 'no_voltage');
     const hasOverheating = symptoms.some(s => s.type === 'overheating');
-    const hasNoCommunication = symptoms.some(s => s.type === 'no_communication');
-    
+    const hasNoCommunication = symptoms.some(
+      s => s.type === 'no_communication',
+    );
+
     if (hasNoVoltage) {
       return 'no_power';
     }
@@ -411,7 +436,7 @@ class DiagnosticService {
     if (hasNoCommunication && severeCritical === 0) {
       return 'communication_failure';
     }
-    
+
     return 'unknown';
   }
 
@@ -424,22 +449,22 @@ class DiagnosticService {
     matchedRules: InferenceRule[],
   ): number {
     let confidence = 50; // Base confidence
-    
+
     // Add confidence based on matched rules
     if (matchedRules.length > 0) {
       confidence = matchedRules[0].conclusion.confidence;
     }
-    
+
     // Adjust based on number of symptoms
     const symptomBonus = Math.min(symptoms.length * 5, 20);
     confidence += symptomBonus;
-    
+
     // Adjust based on symptom severity
     const hasCritical = symptoms.some(s => s.severity === 'critical');
     if (hasCritical) {
       confidence += 10;
     }
-    
+
     return Math.min(confidence, 95); // Cap at 95%
   }
 
@@ -448,67 +473,79 @@ class DiagnosticService {
    */
   private identifyProbableCauses(
     failurePattern: FailurePattern,
-    symptoms: Symptom[],
+    _symptoms: Symptom[],
   ): ProbableCause[] {
     const knowledge = this.failureKnowledgeBase.get(failurePattern);
     if (!knowledge) {
       return [];
     }
-    
-    const causes: ProbableCause[] = knowledge.typicalCauses.map((cause, index) => ({
-      id: `cause_${Date.now()}_${index}`,
-      description: cause,
-      probability: 80 - (index * 15), // Decreasing probability
-      reasoning: `Common cause for ${failurePattern}`,
-      testProcedure: knowledge.diagnosticSteps[index] || 'Visual inspection',
-    }));
-    
+
+    const causes: ProbableCause[] = knowledge.typicalCauses.map(
+      (cause, index) => ({
+        id: `cause_${Date.now()}_${index}`,
+        description: cause,
+        probability: 80 - index * 15, // Decreasing probability
+        reasoning: `Common cause for ${failurePattern}`,
+        testProcedure: knowledge.diagnosticSteps[index] || 'Visual inspection',
+      }),
+    );
+
     return causes.slice(0, 3); // Return top 3 causes
   }
 
   /**
    * Analyze power route for power-related issues
    */
-  private analyzePowerRoute(symptoms: Symptom[]): PowerRouteAnalysis | undefined {
+  private analyzePowerRoute(
+    symptoms: Symptom[],
+  ): PowerRouteAnalysis | undefined {
     const powerRelated = symptoms.some(
       s => s.type === 'no_voltage' || s.type === 'low_voltage',
     );
-    
+
     if (!powerRelated) {
       return undefined;
     }
-    
+
     // Check for input voltage symptom
-    const inputVoltage = symptoms.find(s => 
-      s.description.toLowerCase().includes('input') || 
-      s.description.toLowerCase().includes('5v')
+    const inputVoltage = symptoms.find(
+      s =>
+        s.description.toLowerCase().includes('input') ||
+        s.description.toLowerCase().includes('5v'),
     );
-    
+
     // Check for regulator output symptom
-    const regulatorOutput = symptoms.find(s => 
-      s.description.toLowerCase().includes('3.3v') || 
-      s.description.toLowerCase().includes('regulator')
+    const regulatorOutput = symptoms.find(
+      s =>
+        s.description.toLowerCase().includes('3.3v') ||
+        s.description.toLowerCase().includes('regulator'),
     );
-    
+
     const analysis: PowerRouteAnalysis = {
       inputVoltage: {
-        present: inputVoltage?.measuredValue ? inputVoltage.measuredValue > 4.0 : false,
+        present: inputVoltage?.measuredValue
+          ? inputVoltage.measuredValue > 4.0
+          : false,
         value: inputVoltage?.measuredValue,
         expected: 5.0,
       },
       regulatorStatus: {
-        working: regulatorOutput?.measuredValue ? regulatorOutput.measuredValue > 3.0 : false,
+        working: regulatorOutput?.measuredValue
+          ? regulatorOutput.measuredValue > 3.0
+          : false,
         outputVoltage: regulatorOutput?.measuredValue,
       },
       microcontrollerPower: {
-        present: regulatorOutput?.measuredValue ? regulatorOutput.measuredValue > 3.0 : false,
+        present: regulatorOutput?.measuredValue
+          ? regulatorOutput.measuredValue > 3.0
+          : false,
         value: regulatorOutput?.measuredValue,
         expected: 3.3,
       },
       routeIntegrity: 'broken',
       recommendations: [],
     };
-    
+
     // Generate recommendations based on analysis
     if (!analysis.inputVoltage.present) {
       analysis.recommendations.push('Check USB cable and power source');
@@ -519,14 +556,14 @@ class DiagnosticService {
       analysis.recommendations.push('Check for shorts on output rail');
       analysis.suspectedFailurePoint = 'voltage_regulator';
     }
-    
+
     // Determine route integrity
     if (analysis.inputVoltage.present && analysis.regulatorStatus.working) {
       analysis.routeIntegrity = 'good';
     } else if (analysis.inputVoltage.present) {
       analysis.routeIntegrity = 'degraded';
     }
-    
+
     return analysis;
   }
 
@@ -535,16 +572,16 @@ class DiagnosticService {
    */
   private generateRecommendations(
     failurePattern: FailurePattern,
-    symptoms: Symptom[],
-    probableCauses: ProbableCause[],
+    _symptoms: Symptom[],
+    _probableCauses: ProbableCause[],
   ): RepairRecommendation[] {
     const knowledge = this.failureKnowledgeBase.get(failurePattern);
     if (!knowledge) {
       return [];
     }
-    
+
     const recommendations: RepairRecommendation[] = [];
-    
+
     // Create recommendations from repair procedures
     knowledge.repairProcedures.forEach((procedure, index) => {
       recommendations.push({
@@ -555,24 +592,38 @@ class DiagnosticService {
         tools: knowledge.requiredTools,
         steps: [procedure],
         expectedOutcome: `Resolve ${failurePattern}`,
-        confidence: 85 - (index * 10),
+        confidence: 85 - index * 10,
       });
     });
-    
+
     return recommendations.slice(0, 5); // Top 5 recommendations
   }
 
   /**
    * Infer action type from procedure description
    */
-  private inferActionFromProcedure(procedure: string): RepairRecommendation['action'] {
+  private inferActionFromProcedure(
+    procedure: string,
+  ): RepairRecommendation['action'] {
     const lower = procedure.toLowerCase();
-    if (lower.includes('replace')) return 'replace';
-    if (lower.includes('measure') || lower.includes('check')) return 'measure';
-    if (lower.includes('test')) return 'test';
-    if (lower.includes('reflow')) return 'reflow';
-    if (lower.includes('clean')) return 'clean';
-    if (lower.includes('flash') || lower.includes('program')) return 'reprogram';
+    if (lower.includes('replace')) {
+      return 'replace';
+    }
+    if (lower.includes('measure') || lower.includes('check')) {
+      return 'measure';
+    }
+    if (lower.includes('test')) {
+      return 'test';
+    }
+    if (lower.includes('reflow')) {
+      return 'reflow';
+    }
+    if (lower.includes('clean')) {
+      return 'clean';
+    }
+    if (lower.includes('flash') || lower.includes('program')) {
+      return 'reprogram';
+    }
     return 'test';
   }
 
@@ -588,9 +639,11 @@ class DiagnosticService {
   /**
    * Analyze sensing measurements and convert to symptoms
    */
-  analyzeMeasurementsForSymptoms(measurements: SensingMeasurement[]): Symptom[] {
+  analyzeMeasurementsForSymptoms(
+    measurements: SensingMeasurement[],
+  ): Symptom[] {
     const symptoms: Symptom[] = [];
-    
+
     measurements.forEach((measurement, index) => {
       if (measurement.anomalyDetected) {
         const symptom: Symptom = {
@@ -598,7 +651,10 @@ class DiagnosticService {
           type: this.mapAnomalyToSymptomType(measurement.anomalyType),
           componentId: measurement.componentId,
           pinId: measurement.pinId,
-          measuredValue: typeof measurement.value === 'number' ? measurement.value : undefined,
+          measuredValue:
+            typeof measurement.value === 'number'
+              ? measurement.value
+              : undefined,
           unit: measurement.unit,
           description: `Anomaly detected: ${measurement.anomalyType}`,
           severity: this.inferSeverity(measurement),
@@ -606,16 +662,14 @@ class DiagnosticService {
         symptoms.push(symptom);
       }
     });
-    
+
     return symptoms;
   }
 
   /**
    * Map anomaly type to symptom type
    */
-  private mapAnomalyToSymptomType(
-    anomalyType?: string,
-  ): Symptom['type'] {
+  private mapAnomalyToSymptomType(anomalyType?: string): Symptom['type'] {
     switch (anomalyType) {
       case 'out_of_range':
         return 'low_voltage';

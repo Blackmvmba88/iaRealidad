@@ -88,7 +88,9 @@ describe('DiagnosticService', () => {
       const result = diagnosticService.diagnose(symptoms);
 
       expect(result.powerRouteAnalysis).toBeDefined();
-      expect(result.powerRouteAnalysis?.recommendations.length).toBeGreaterThan(0);
+      expect(result.powerRouteAnalysis?.recommendations.length).toBeGreaterThan(
+        0,
+      );
     });
 
     it('should calculate higher confidence with multiple symptoms', () => {
@@ -125,7 +127,9 @@ describe('DiagnosticService', () => {
 
   describe('getFailureKnowledge', () => {
     it('should return knowledge for voltage regulator failure', () => {
-      const knowledge = diagnosticService.getFailureKnowledge('voltage_regulator_failure');
+      const knowledge = diagnosticService.getFailureKnowledge(
+        'voltage_regulator_failure',
+      );
 
       expect(knowledge).toBeDefined();
       expect(knowledge?.commonSymptoms.length).toBeGreaterThan(0);
@@ -135,7 +139,9 @@ describe('DiagnosticService', () => {
     });
 
     it('should return knowledge for firmware corruption', () => {
-      const knowledge = diagnosticService.getFailureKnowledge('firmware_corruption');
+      const knowledge = diagnosticService.getFailureKnowledge(
+        'firmware_corruption',
+      );
 
       expect(knowledge).toBeDefined();
       expect(knowledge?.difficulty).toBe('easy');
@@ -143,7 +149,9 @@ describe('DiagnosticService', () => {
     });
 
     it('should return knowledge for microcontroller failure', () => {
-      const knowledge = diagnosticService.getFailureKnowledge('microcontroller_dead');
+      const knowledge = diagnosticService.getFailureKnowledge(
+        'microcontroller_dead',
+      );
 
       expect(knowledge).toBeDefined();
       expect(knowledge?.difficulty).toBe('hard');
@@ -151,7 +159,9 @@ describe('DiagnosticService', () => {
     });
 
     it('should return undefined for unknown pattern', () => {
-      const knowledge = diagnosticService.getFailureKnowledge('unknown' as FailurePattern);
+      const knowledge = diagnosticService.getFailureKnowledge(
+        'unknown' as FailurePattern,
+      );
 
       expect(knowledge).toBeUndefined();
     });
@@ -174,7 +184,8 @@ describe('DiagnosticService', () => {
         },
       ];
 
-      const symptoms = diagnosticService.analyzeMeasurementsForSymptoms(measurements);
+      const symptoms =
+        diagnosticService.analyzeMeasurementsForSymptoms(measurements);
 
       expect(symptoms.length).toBe(1);
       expect(symptoms[0].componentId).toBe('regulator_1');
@@ -194,7 +205,8 @@ describe('DiagnosticService', () => {
         },
       ];
 
-      const symptoms = diagnosticService.analyzeMeasurementsForSymptoms(measurements);
+      const symptoms =
+        diagnosticService.analyzeMeasurementsForSymptoms(measurements);
 
       expect(symptoms.length).toBe(0);
     });
@@ -215,7 +227,8 @@ describe('DiagnosticService', () => {
         },
       ];
 
-      const symptoms = diagnosticService.analyzeMeasurementsForSymptoms(measurements);
+      const symptoms =
+        diagnosticService.analyzeMeasurementsForSymptoms(measurements);
 
       expect(symptoms[0].severity).toBe('critical');
     });
@@ -285,7 +298,9 @@ describe('DiagnosticService', () => {
 
       expect(result.powerRouteAnalysis?.inputVoltage.present).toBe(true);
       expect(result.powerRouteAnalysis?.regulatorStatus.working).toBe(false);
-      expect(result.powerRouteAnalysis?.suspectedFailurePoint).toBe('voltage_regulator');
+      expect(result.powerRouteAnalysis?.suspectedFailurePoint).toBe(
+        'voltage_regulator',
+      );
     });
   });
 
@@ -305,7 +320,7 @@ describe('DiagnosticService', () => {
       const result = diagnosticService.diagnose(symptoms);
 
       expect(result.recommendations.length).toBeGreaterThan(0);
-      
+
       // Check priority ordering
       for (let i = 0; i < result.recommendations.length - 1; i++) {
         expect(result.recommendations[i].priority).toBeLessThanOrEqual(
@@ -366,7 +381,7 @@ describe('DiagnosticService', () => {
       const result = diagnosticService.diagnose(symptoms);
 
       expect(result.probableCauses.length).toBeGreaterThan(0);
-      
+
       // Check probability decreases
       for (let i = 0; i < result.probableCauses.length - 1; i++) {
         expect(result.probableCauses[i].probability).toBeGreaterThanOrEqual(
@@ -408,7 +423,9 @@ describe('DiagnosticService', () => {
       const result = diagnosticService.diagnose(symptoms);
 
       expect(result.estimatedDifficulty).toBeDefined();
-      expect(['easy', 'medium', 'hard', 'expert']).toContain(result.estimatedDifficulty);
+      expect(['easy', 'medium', 'hard', 'expert']).toContain(
+        result.estimatedDifficulty,
+      );
     });
 
     it('should include time and cost estimates', () => {

@@ -379,8 +379,15 @@ export type FailurePattern =
 // Symptom Type
 export interface Symptom {
   id: string;
-  type: 'no_voltage' | 'low_voltage' | 'high_voltage' | 'no_communication' | 
-        'overheating' | 'noise' | 'intermittent' | 'physical_damage';
+  type:
+    | 'no_voltage'
+    | 'low_voltage'
+    | 'high_voltage'
+    | 'no_communication'
+    | 'overheating'
+    | 'noise'
+    | 'intermittent'
+    | 'physical_damage';
   componentId?: string;
   pinId?: string;
   measuredValue?: number;
@@ -420,7 +427,11 @@ export interface ProbableCause {
 // Power Route Analysis
 export interface PowerRouteAnalysis {
   inputVoltage: {present: boolean; value?: number; expected: number};
-  regulatorStatus: {working: boolean; componentId?: string; outputVoltage?: number};
+  regulatorStatus: {
+    working: boolean;
+    componentId?: string;
+    outputVoltage?: number;
+  };
   microcontrollerPower: {present: boolean; value?: number; expected: number};
   suspectedFailurePoint?: string; // Component ID
   routeIntegrity: 'good' | 'degraded' | 'broken';
@@ -448,34 +459,34 @@ export interface RepairCase {
   timestamp: string;
   boardType: string;
   boardId?: string;
-  
+
   // Symptoms and Diagnosis
   symptoms: Symptom[];
   failurePattern: FailurePattern;
   diagnosticResult: DiagnosticResult;
-  
+
   // Repair Process
   repairSteps: RepairStep[];
   replacedComponents?: ComponentReplacement[];
-  
+
   // Validation
   validationTest?: ValidationTest;
   validationResult?: ValidationResult;
   repairSuccess: boolean;
-  
+
   // Metadata
   estimatedCost: number; // USD
   actualCost?: number; // USD
   estimatedTime: number; // minutes
   actualTime?: number; // minutes
   technicianNotes?: string;
-  
+
   // Learning Data
   rootCause?: string;
   preventiveMeasures?: string[];
   clientSource?: string; // e.g., "cheap power supply"
   futureRiskProbability?: number; // 0-100
-  
+
   // Tags for search
   tags?: string[];
 }
@@ -583,23 +594,23 @@ export interface WaveformAnalysis {
   id: string;
   timestamp: string;
   signalType: 'digital' | 'analog' | 'pwm' | 'serial';
-  
+
   // Time domain
   frequency?: number; // Hz
   dutyCycle?: number; // percentage for PWM
   amplitude?: {min: number; max: number; unit: string};
-  
+
   // Quality metrics
   jitter?: number; // ns
   ripple?: number; // mV
   overshoot?: number; // percentage
   ringing?: boolean;
-  
+
   // Serial protocols
   baudRate?: number;
   protocol?: 'UART' | 'I2C' | 'SPI' | 'CAN';
   errors?: number;
-  
+
   quality: 'good' | 'acceptable' | 'poor' | 'critical';
   issues?: string[];
   recommendations?: string[];

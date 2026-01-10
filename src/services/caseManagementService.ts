@@ -60,7 +60,11 @@ class CaseManagementService {
       repairSuccess: false,
       estimatedCost: diagnosticResult.estimatedCost,
       estimatedTime: diagnosticResult.estimatedTime,
-      tags: this.generateTags(boardType, diagnosticResult.failurePattern, symptoms),
+      tags: this.generateTags(
+        boardType,
+        diagnosticResult.failurePattern,
+        symptoms,
+      ),
     };
 
     this.cases.set(caseId, newCase);
@@ -78,7 +82,9 @@ class CaseManagementService {
    * Get a case by case number
    */
   getCaseByNumber(caseNumber: number): RepairCase | undefined {
-    return Array.from(this.cases.values()).find(c => c.caseNumber === caseNumber);
+    return Array.from(this.cases.values()).find(
+      c => c.caseNumber === caseNumber,
+    );
   }
 
   /**
@@ -149,7 +155,7 @@ class CaseManagementService {
     repairCase.validationResult = validationResult;
     repairCase.repairSuccess = validationResult.passed;
     repairCase.actualTime = actualTime;
-    
+
     if (notes) {
       repairCase.technicianNotes = notes;
     }
@@ -172,9 +178,15 @@ class CaseManagementService {
       return false;
     }
 
-    if (rootCause) repairCase.rootCause = rootCause;
-    if (preventiveMeasures) repairCase.preventiveMeasures = preventiveMeasures;
-    if (clientSource) repairCase.clientSource = clientSource;
+    if (rootCause) {
+      repairCase.rootCause = rootCause;
+    }
+    if (preventiveMeasures) {
+      repairCase.preventiveMeasures = preventiveMeasures;
+    }
+    if (clientSource) {
+      repairCase.clientSource = clientSource;
+    }
     if (futureRiskProbability !== undefined) {
       repairCase.futureRiskProbability = futureRiskProbability;
     }
@@ -188,8 +200,8 @@ class CaseManagementService {
    * Search cases by board type
    */
   searchByBoardType(boardType: string): RepairCase[] {
-    return Array.from(this.cases.values()).filter(
-      c => c.boardType.toLowerCase().includes(boardType.toLowerCase())
+    return Array.from(this.cases.values()).filter(c =>
+      c.boardType.toLowerCase().includes(boardType.toLowerCase()),
     );
   }
 
@@ -198,7 +210,7 @@ class CaseManagementService {
    */
   searchByFailurePattern(pattern: FailurePattern): RepairCase[] {
     return Array.from(this.cases.values()).filter(
-      c => c.failurePattern === pattern
+      c => c.failurePattern === pattern,
     );
   }
 
@@ -206,8 +218,8 @@ class CaseManagementService {
    * Search cases by tags
    */
   searchByTag(tag: string): RepairCase[] {
-    return Array.from(this.cases.values()).filter(
-      c => c.tags?.some(t => t.toLowerCase().includes(tag.toLowerCase()))
+    return Array.from(this.cases.values()).filter(c =>
+      c.tags?.some(t => t.toLowerCase().includes(tag.toLowerCase())),
     );
   }
 
@@ -229,7 +241,8 @@ class CaseManagementService {
         existingCase,
       );
 
-      if (similarity > 30) { // Minimum 30% similarity
+      if (similarity > 30) {
+        // Minimum 30% similarity
         const matchingSymptoms = this.findMatchingSymptoms(
           symptoms,
           existingCase.symptoms,
@@ -250,9 +263,7 @@ class CaseManagementService {
     }
 
     // Sort by similarity (highest first) and limit results
-    return matches
-      .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, limit);
+    return matches.sort((a, b) => b.similarity - a.similarity).slice(0, limit);
   }
 
   /**
@@ -268,7 +279,9 @@ class CaseManagementService {
     // Board type match (30% weight)
     if (boardType.toLowerCase() === existingCase.boardType.toLowerCase()) {
       similarity += 30;
-    } else if (existingCase.boardType.toLowerCase().includes(boardType.toLowerCase())) {
+    } else if (
+      existingCase.boardType.toLowerCase().includes(boardType.toLowerCase())
+    ) {
       similarity += 15;
     }
 
@@ -278,7 +291,9 @@ class CaseManagementService {
       existingCase.symptoms,
     );
     const symptomSimilarity =
-      (matchingSymptoms.length / Math.max(symptoms.length, existingCase.symptoms.length)) * 70;
+      (matchingSymptoms.length /
+        Math.max(symptoms.length, existingCase.symptoms.length)) *
+      70;
     similarity += symptomSimilarity;
 
     return Math.round(similarity);
@@ -335,7 +350,9 @@ class CaseManagementService {
       return 0;
     }
 
-    const successfulCases = casesWithPattern.filter(c => c.repairSuccess).length;
+    const successfulCases = casesWithPattern.filter(
+      c => c.repairSuccess,
+    ).length;
     return Math.round((successfulCases / casesWithPattern.length) * 100);
   }
 
@@ -344,7 +361,9 @@ class CaseManagementService {
    */
   getAverageRepairTime(pattern: FailurePattern): number {
     const casesWithPattern = this.searchByFailurePattern(pattern);
-    const casesWithTime = casesWithPattern.filter(c => c.actualTime !== undefined);
+    const casesWithTime = casesWithPattern.filter(
+      c => c.actualTime !== undefined,
+    );
 
     if (casesWithTime.length === 0) {
       return 0;
@@ -380,7 +399,9 @@ class CaseManagementService {
   /**
    * Get most common failure patterns
    */
-  getMostCommonFailures(limit: number = 5): {pattern: FailurePattern; count: number}[] {
+  getMostCommonFailures(
+    limit: number = 5,
+  ): {pattern: FailurePattern; count: number}[] {
     const patternCounts = new Map<FailurePattern, number>();
 
     for (const repairCase of this.cases.values()) {
@@ -462,12 +483,12 @@ class CaseManagementService {
     try {
       const repairCase = JSON.parse(caseJson) as RepairCase;
       this.cases.set(repairCase.id, repairCase);
-      
+
       // Update counter if needed
       if (repairCase.caseNumber >= this.caseCounter) {
         this.caseCounter = repairCase.caseNumber + 1;
       }
-      
+
       return repairCase;
     } catch (error) {
       console.error('Failed to import case:', error);
