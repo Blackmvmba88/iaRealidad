@@ -592,6 +592,26 @@ export const getSampleDataForMode = (mode: string) => {
       };
     case 'validation':
       return {validationTests};
+    case 'sensing':
+      return {
+        availableSensors: [
+          'audio',
+          'microphone',
+          'temperature',
+          'bluetooth_multimeter',
+          'uart_debug',
+          'i2c_sensor',
+          'spi_sensor',
+          'visual_topology',
+        ],
+        description: 'ERA II: Real-time sensing and hardware integration',
+        features: [
+          'Passive sensing: Audio, microphone, temperature',
+          'Active hardware: Bluetooth multimeters, UART, I2C, SPI',
+          'Real-time anomaly detection',
+          'Sensor data visualization',
+        ],
+      };
     default:
       return {};
   }
