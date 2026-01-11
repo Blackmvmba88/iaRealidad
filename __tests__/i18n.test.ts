@@ -5,17 +5,17 @@ import {es} from '../src/i18n/es';
 describe('I18n Service', () => {
   beforeEach(() => {
     // Reset to default locale before each test
-    i18n.setLocale('en');
+    i18n.setLocale('es');
   });
 
   describe('Locale Management', () => {
-    it('should start with English as default locale', () => {
-      expect(i18n.getLocale()).toBe('en');
+    it('should start with Spanish as default locale', () => {
+      expect(i18n.getLocale()).toBe('es');
     });
 
-    it('should switch to Spanish locale', () => {
-      i18n.setLocale('es');
-      expect(i18n.getLocale()).toBe('es');
+    it('should switch to English locale', () => {
+      i18n.setLocale('en');
+      expect(i18n.getLocale()).toBe('en');
     });
 
     it('should fall back to English for invalid locale', () => {
@@ -37,19 +37,19 @@ describe('I18n Service', () => {
   });
 
   describe('Translation Retrieval', () => {
-    it('should get English translations', () => {
-      const translation = i18n.getTranslation();
-      expect(translation.home.title).toBe('Electronics Repair Assistant');
-      expect(translation.common.ok).toBe('OK');
-    });
-
     it('should get Spanish translations', () => {
-      i18n.setLocale('es');
       const translation = i18n.getTranslation();
       expect(translation.home.title).toBe(
         'Asistente de Reparación Electrónica',
       );
       expect(translation.common.ok).toBe('Aceptar');
+    });
+
+    it('should get English translations', () => {
+      i18n.setLocale('en');
+      const translation = i18n.getTranslation();
+      expect(translation.home.title).toBe('Electronics Repair Assistant');
+      expect(translation.common.ok).toBe('OK');
     });
 
     it('should get translation for specific locale', () => {
@@ -65,21 +65,21 @@ describe('I18n Service', () => {
 
   describe('Translation Keys (t function)', () => {
     it('should translate simple keys', () => {
-      expect(i18n.t('common.ok')).toBe('OK');
-      expect(i18n.t('common.cancel')).toBe('Cancel');
+      expect(i18n.t('common.ok')).toBe('Aceptar');
+      expect(i18n.t('common.cancel')).toBe('Cancelar');
     });
 
     it('should translate nested keys', () => {
-      expect(i18n.t('home.title')).toBe('Electronics Repair Assistant');
-      expect(i18n.t('modes.inspection.title')).toBe('Inspection');
-      expect(i18n.t('arCamera.title')).toBe('AR View');
-    });
-
-    it('should translate to Spanish', () => {
-      i18n.setLocale('es');
-      expect(i18n.t('common.ok')).toBe('Aceptar');
       expect(i18n.t('home.title')).toBe('Asistente de Reparación Electrónica');
       expect(i18n.t('modes.inspection.title')).toBe('Inspección');
+      expect(i18n.t('arCamera.title')).toBe('Vista RA');
+    });
+
+    it('should translate to English', () => {
+      i18n.setLocale('en');
+      expect(i18n.t('common.ok')).toBe('OK');
+      expect(i18n.t('home.title')).toBe('Electronics Repair Assistant');
+      expect(i18n.t('modes.inspection.title')).toBe('Inspection');
     });
 
     it('should return key for missing translations', () => {
@@ -93,23 +93,23 @@ describe('I18n Service', () => {
   });
 
   describe('Mode Translations', () => {
-    it('should have all mode translations in English', () => {
-      const translation = i18n.getTranslation();
-      expect(translation.modes.inspection.title).toBe('Inspection');
-      expect(translation.modes.measurement.title).toBe('Measurement');
-      expect(translation.modes.repair.title).toBe('Repair');
-      expect(translation.modes.creation.title).toBe('Creation');
-      expect(translation.modes.validation.title).toBe('Validation');
-    });
-
     it('should have all mode translations in Spanish', () => {
-      i18n.setLocale('es');
       const translation = i18n.getTranslation();
       expect(translation.modes.inspection.title).toBe('Inspección');
       expect(translation.modes.measurement.title).toBe('Medición');
       expect(translation.modes.repair.title).toBe('Reparación');
       expect(translation.modes.creation.title).toBe('Creación');
       expect(translation.modes.validation.title).toBe('Validación');
+    });
+
+    it('should have all mode translations in English', () => {
+      i18n.setLocale('en');
+      const translation = i18n.getTranslation();
+      expect(translation.modes.inspection.title).toBe('Inspection');
+      expect(translation.modes.measurement.title).toBe('Measurement');
+      expect(translation.modes.repair.title).toBe('Repair');
+      expect(translation.modes.creation.title).toBe('Creation');
+      expect(translation.modes.validation.title).toBe('Validation');
     });
 
     it('should have mode descriptions', () => {
@@ -122,58 +122,58 @@ describe('I18n Service', () => {
 
     it('should have short labels for all modes', () => {
       const translation = i18n.getTranslation();
-      expect(translation.modes.inspection.shortLabel).toBe('Inspect');
-      expect(translation.modes.measurement.shortLabel).toBe('Measure');
-      expect(translation.modes.repair.shortLabel).toBe('Repair');
-      expect(translation.modes.creation.shortLabel).toBe('Create');
-      expect(translation.modes.validation.shortLabel).toBe('Validate');
+      expect(translation.modes.inspection.shortLabel).toBe('Inspeccionar');
+      expect(translation.modes.measurement.shortLabel).toBe('Medir');
+      expect(translation.modes.repair.shortLabel).toBe('Reparar');
+      expect(translation.modes.creation.shortLabel).toBe('Crear');
+      expect(translation.modes.validation.shortLabel).toBe('Validar');
     });
   });
 
   describe('Component Translations', () => {
-    it('should translate component types in English', () => {
-      const translation = i18n.getTranslation();
-      expect(translation.components.resistor).toBe('Resistor');
-      expect(translation.components.capacitor).toBe('Capacitor');
-      expect(translation.components.microcontroller).toBe('Microcontroller');
-    });
-
     it('should translate component types in Spanish', () => {
-      i18n.setLocale('es');
       const translation = i18n.getTranslation();
       expect(translation.components.resistor).toBe('Resistor');
       expect(translation.components.capacitor).toBe('Capacitor');
       expect(translation.components.microcontroller).toBe('Microcontrolador');
     });
+
+    it('should translate component types in English', () => {
+      i18n.setLocale('en');
+      const translation = i18n.getTranslation();
+      expect(translation.components.resistor).toBe('Resistor');
+      expect(translation.components.capacitor).toBe('Capacitor');
+      expect(translation.components.microcontroller).toBe('Microcontroller');
+    });
   });
 
   describe('Pin Type Translations', () => {
-    it('should translate pin types in English', () => {
-      const translation = i18n.getTranslation();
-      expect(translation.pins.vcc).toBe('VCC (Power)');
-      expect(translation.pins.gnd).toBe('GND (Ground)');
-      expect(translation.pins.data).toBe('Data');
-    });
-
     it('should translate pin types in Spanish', () => {
-      i18n.setLocale('es');
       const translation = i18n.getTranslation();
       expect(translation.pins.vcc).toBe('VCC (Alimentación)');
       expect(translation.pins.gnd).toBe('GND (Tierra)');
       expect(translation.pins.data).toBe('Datos');
     });
+
+    it('should translate pin types in English', () => {
+      i18n.setLocale('en');
+      const translation = i18n.getTranslation();
+      expect(translation.pins.vcc).toBe('VCC (Power)');
+      expect(translation.pins.gnd).toBe('GND (Ground)');
+      expect(translation.pins.data).toBe('Data');
+    });
   });
 
   describe('Measurement Translations', () => {
     it('should translate measurement terms', () => {
-      expect(i18n.t('measurements.voltage')).toBe('Voltage');
-      expect(i18n.t('measurements.expected')).toBe('Expected');
-      expect(i18n.t('measurements.passed')).toBe('Passed');
-
-      i18n.setLocale('es');
       expect(i18n.t('measurements.voltage')).toBe('Voltaje');
       expect(i18n.t('measurements.expected')).toBe('Esperado');
       expect(i18n.t('measurements.passed')).toBe('Aprobado');
+
+      i18n.setLocale('en');
+      expect(i18n.t('measurements.voltage')).toBe('Voltage');
+      expect(i18n.t('measurements.expected')).toBe('Expected');
+      expect(i18n.t('measurements.passed')).toBe('Passed');
     });
   });
 
@@ -199,24 +199,24 @@ describe('I18n Service', () => {
 
       expect(typeof t).toBe('function');
       expect(translation).toBeDefined();
-      expect(locale).toBe('en');
+      expect(locale).toBe('es');
       expect(availableLocales).toContain('en');
       expect(availableLocales).toContain('es');
     });
 
     it('should translate using hook', () => {
       const {t} = useTranslation();
-      expect(t('common.ok')).toBe('OK');
-      expect(t('home.title')).toBe('Electronics Repair Assistant');
+      expect(t('common.ok')).toBe('Aceptar');
+      expect(t('home.title')).toBe('Asistente de Reparación Electrónica');
     });
 
     it('should provide setLocale function', () => {
       const {setLocale, locale: initialLocale} = useTranslation();
-      expect(initialLocale).toBe('en');
+      expect(initialLocale).toBe('es');
 
-      setLocale('es');
+      setLocale('en');
       const {locale: newLocale} = useTranslation();
-      expect(newLocale).toBe('es');
+      expect(newLocale).toBe('en');
     });
 
     it('should provide getLocaleDisplayName function', () => {

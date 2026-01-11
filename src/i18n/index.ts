@@ -13,7 +13,7 @@ const translations: Record<Locale, Translation> = {
  * I18n service for managing translations
  */
 class I18nService {
-  private currentLocale: Locale = 'en';
+  private currentLocale: Locale = 'es';
 
   /**
    * Get current locale
