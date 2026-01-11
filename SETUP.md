@@ -11,8 +11,16 @@ Before starting, ensure you have:
 - [ ] Node.js 18 or later installed
 - [ ] npm or yarn package manager
 - [ ] Git installed
+
+**For mobile platforms:**
 - [ ] For iOS: macOS with Xcode 14+
 - [ ] For Android: Android Studio with SDK tools
+
+**For desktop platforms:**
+- [ ] For Windows: Windows 10 1809+ with Visual Studio 2019+
+- [ ] For macOS: macOS 10.14+ with Xcode 14+
+
+📚 See [PLATFORM_COMPATIBILITY.md](./PLATFORM_COMPATIBILITY.md) for detailed platform requirements.
 
 ### Step-by-Step Setup
 
@@ -93,6 +101,31 @@ npm run ios
 # Or specify a simulator
 npx react-native run-ios --simulator="iPhone 15"
 ```
+
+##### On Windows (Desktop)
+
+```bash
+# Initialize React Native Windows (first time only)
+npx react-native-windows-init --overwrite
+
+# Run the app
+npm run windows
+```
+
+##### On macOS (Desktop)
+
+```bash
+# Initialize React Native macOS (first time only)
+npx react-native-macos-init --overwrite
+
+# Install CocoaPods dependencies
+cd macos && pod install && cd ..
+
+# Run the app
+npm run macos
+```
+
+> **Note**: Desktop platforms are in development. AR features require mobile devices with cameras. Desktop versions support diagnostic, case management, and firmware generation features.
 
 #### 4. Granting Permissions
 

@@ -105,20 +105,34 @@ A cross-platform AR (Augmented Reality) assistant for electronics repair, measur
 - **Camera/AR**: react-native-vision-camera
 - **Graphics**: react-native-svg for overlays
 - **Navigation**: React Navigation 6
-- **Cross-platform**: iOS and Android
+- **Cross-platform**: Android, iOS, Windows, macOS, and Linux (planned)
 
 ## Prerequisites
 
 - Node.js >= 18
 - npm or yarn
-- For iOS development:
-  - macOS
-  - Xcode 14+
-  - CocoaPods
-- For Android development:
+
+### Platform-Specific Requirements
+
+- **For Android development**:
   - Android Studio
   - Android SDK (API level 21+)
   - Java Development Kit (JDK) 11+
+- **For iOS development**:
+  - macOS
+  - Xcode 14+
+  - CocoaPods
+- **For Windows development**:
+  - Windows 10 version 1809+
+  - Visual Studio 2019+ with C++ tools
+  - React Native for Windows
+- **For macOS development**:
+  - macOS 10.14+
+  - Xcode 14+
+  - CocoaPods
+  - React Native for macOS
+
+📚 See [PLATFORM_COMPATIBILITY.md](./PLATFORM_COMPATIBILITY.md) for detailed platform requirements and setup instructions.
 
 ## Installation
 
@@ -158,12 +172,30 @@ npm run ios
 yarn ios
 ```
 
+### Windows
+```bash
+npm run windows
+# or
+yarn windows
+```
+
+### macOS
+```bash
+npm run macos
+# or
+yarn macos
+```
+
 ### Start Metro Bundler
 ```bash
 npm start
 # or
 yarn start
 ```
+
+> **Note**: Desktop platforms (Windows, macOS) are in development. AR features work best on mobile devices (Android, iOS). Desktop versions will have limited AR capabilities but full diagnostic and case management features.
+
+📚 For detailed platform-specific instructions, see [PLATFORM_COMPATIBILITY.md](./PLATFORM_COMPATIBILITY.md)
 
 ## Permissions
 
@@ -353,7 +385,16 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 
 ### Recently Added Features
 
-#### ERA III: Diagnostic Intelligence System 🔥 **NEW!**
+#### Cross-Platform Desktop Support 🆕 **NEW!**
+- **Multi-Platform**: Now supports Android, iOS, Windows, macOS, and Linux (planned)
+- **Platform Utilities**: Smart platform detection and conditional feature rendering
+- **Desktop Compatibility**: Full diagnostic and case management on desktop platforms
+- **Responsive UI**: Adapts to mobile and desktop screen sizes
+- **Platform-Specific Features**: AR on mobile, enhanced diagnostics on desktop
+- 217 comprehensive tests (all passing)
+- Complete documentation in PLATFORM_COMPATIBILITY.md and PLATFORM_EXAMPLES.md
+
+#### ERA III: Diagnostic Intelligence System 🔥
 - **Diagnostic Engine**: Automatic failure pattern detection with 5 pre-loaded patterns
 - **Inference Rules**: Logic-based reasoning from symptoms to diagnosis
 - **Power Route Analysis**: Traces power failures through the circuit
@@ -362,7 +403,6 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 - **Historical Pattern Matching**: Find similar cases with similarity scoring
 - **Learning System**: Tracks success rates, costs, and times for continuous improvement
 - **Knowledge Base**: Pre-loaded with ESP32/Arduino common failures and repair procedures
-- 42 comprehensive tests (all passing)
 - Complete documentation in ERA_III_DIAGNOSTIC_GUIDE.md
 
 #### Board Configuration System
