@@ -22,38 +22,46 @@ export interface PlatformInfo {
 }
 
 /**
+ * Check if the app is running on Linux
+ */
+export const isLinux = (): boolean => {
+  const OS = Platform.OS;
+  return (
+    OS === 'web' &&
+    typeof navigator !== 'undefined' &&
+    /Linux/i.test(navigator.userAgent) &&
+    !/Android/i.test(navigator.userAgent)
+  );
+};
+
+/**
  * Get comprehensive platform information
  */
 export const getPlatformInfo = (): PlatformInfo => {
   const OS = Platform.OS;
 
   const isWeb = OS === 'web';
-  const isAndroid = OS === 'android';
-  const isIOS = OS === 'ios';
-  const isWindows = OS === 'windows';
-  const isMacOS = OS === 'macos';
+  const isAndroidPlatform = OS === 'android';
+  const isIOSPlatform = OS === 'ios';
+  const isWindowsPlatform = OS === 'windows';
+  const isMacOSPlatform = OS === 'macos';
+  const isLinuxPlatform = isLinux();
 
-  // For Linux, we need to check if it's running on web and detect Linux user agent
-  const isLinux =
-    isWeb &&
-    typeof navigator !== 'undefined' &&
-    /Linux/i.test(navigator.userAgent) &&
-    !/Android/i.test(navigator.userAgent);
-
-  const isMobile = isAndroid || isIOS;
-  const isDesktop = isWindows || isMacOS || isLinux;
+  const isMobilePlatform = isAndroidPlatform || isIOSPlatform;
+  const isDesktopPlatform =
+    isWindowsPlatform || isMacOSPlatform || isLinuxPlatform;
   const isNative = !isWeb;
 
   return {
     isWeb,
     isNative,
-    isAndroid,
-    isIOS,
-    isWindows,
-    isMacOS,
-    isLinux,
-    isDesktop,
-    isMobile,
+    isAndroid: isAndroidPlatform,
+    isIOS: isIOSPlatform,
+    isWindows: isWindowsPlatform,
+    isMacOS: isMacOSPlatform,
+    isLinux: isLinuxPlatform,
+    isDesktop: isDesktopPlatform,
+    isMobile: isMobilePlatform,
     platformName: OS,
     version: Platform.Version,
   };
@@ -71,14 +79,7 @@ export const isMobile = (): boolean => {
  */
 export const isDesktop = (): boolean => {
   const OS = Platform.OS;
-  return (
-    OS === 'windows' ||
-    OS === 'macos' ||
-    (OS === 'web' &&
-      typeof navigator !== 'undefined' &&
-      /Linux/i.test(navigator.userAgent) &&
-      !/Android/i.test(navigator.userAgent))
-  );
+  return OS === 'windows' || OS === 'macos' || isLinux();
 };
 
 /**
@@ -107,19 +108,6 @@ export const isWindows = (): boolean => {
  */
 export const isMacOS = (): boolean => {
   return Platform.OS === 'macos';
-};
-
-/**
- * Check if the app is running on Linux
- */
-export const isLinux = (): boolean => {
-  const OS = Platform.OS;
-  return (
-    OS === 'web' &&
-    typeof navigator !== 'undefined' &&
-    /Linux/i.test(navigator.userAgent) &&
-    !/Android/i.test(navigator.userAgent)
-  );
 };
 
 /**
