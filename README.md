@@ -1,8 +1,12 @@
 # iaRealidad - AR Electronics Repair Assistant
 
+[![Release](https://img.shields.io/badge/release-v0.0.1-blue.svg)](https://github.com/Blackmvmba88/iaRealidad/releases/tag/v0.0.1)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
+[![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)](./PLATFORM_COMPATIBILITY.md)
+
 A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance with **intelligent diagnostic capabilities**.
 
-> 📍 **Current Status**: ERA I - 60% Complete | ERA II - 40% Complete | **ERA III - 50% Complete** 🔥 | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
+> 📍 **Current Version**: [v0.0.1 "El Despertar"](./CHANGELOG.md) | **Status**: ERA I - 60% Complete | ERA II - 40% Complete | **ERA III - 50% Complete** 🔥 | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
 
 ## Features
 

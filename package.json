@@ -1,6 +1,6 @@
 {
   "name": "iarealidad",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Cross-platform AR assistant for electronics repair, measurement and creation",
   "main": "index.js",
   "scripts": {
