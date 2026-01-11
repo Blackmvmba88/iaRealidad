@@ -3,10 +3,97 @@
 [![Release](https://img.shields.io/badge/release-v0.0.1-blue.svg)](https://github.com/Blackmvmba88/iaRealidad/releases/tag/v0.0.1)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS%20%7C%20Windows%20%7C%20macOS-lightgrey.svg)](./PLATFORM_COMPATIBILITY.md)
+[![ERA I](https://img.shields.io/badge/ERA%20I-60%25-yellow.svg)](./ROADMAP.md)
+[![ERA II](https://img.shields.io/badge/ERA%20II-40%25-orange.svg)](./ERA_II_SENSING_GUIDE.md)
+[![ERA III](https://img.shields.io/badge/ERA%20III-50%25-red.svg)](./ERA_III_DIAGNOSTIC_GUIDE.md)
 
 A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance with **intelligent diagnostic capabilities**.
 
 > 📍 **Current Version**: [v0.0.1 "El Despertar"](./CHANGELOG.md) | **Status**: ERA I - 60% Complete | ERA II - 40% Complete | **ERA III - 50% Complete** 🔥 | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
+
+## 🎯 Why This Project?
+
+iaRealidad sits at a **unique intersection of domains** that creates natural opportunities for diverse collaboration:
+
+| Domain | What It Brings | Why It Matters |
+|--------|----------------|----------------|
+| 🟦 **Real Electronics** | Physical hardware knowledge, component behavior, circuit analysis | Bridges digital tools with real-world repair scenarios |
+| 🟩 **Practical AR** | Visual overlay, real-time guidance, spatial understanding | Makes technical knowledge accessible through intuitive visualization |
+| 🟨 **Diagnostics** | Failure pattern detection, troubleshooting logic, root cause analysis | Transforms experience into actionable intelligence |
+| 🟧 **Firmware** | Code generation, protocol implementation, embedded systems | Enables creation and customization, not just repair |
+| 🟥 **Knowledge Infrastructure** | Learning systems, case documentation, community memory | Ensures knowledge compounds over time and benefits everyone |
+
+**The Result**: Few people can cover all these layers—which makes this project a natural magnet for spontaneous collaboration. Each contributor brings expertise from their domain, and together we build something no single person could create alone.
+
+## 👥 Who Is This For?
+
+<details>
+<summary><b>🔧 Electronics Repair Technicians</b></summary>
+
+- Quick component identification in the field
+- Standardized diagnostic procedures
+- Documentation of repair cases for learning
+- Access to collective repair knowledge
+</details>
+
+<details>
+<summary><b>🎓 Students & Educators</b></summary>
+
+- Interactive learning tool for electronics courses
+- Visual aids for understanding circuit topology
+- Practice environment for measurement techniques
+- Teaching resource for hands-on labs
+</details>
+
+<details>
+<summary><b>🛠️ Makers & Hobbyists</b></summary>
+
+- Guidance for adding modules to projects
+- Validation of breadboard circuits
+- Firmware generation for common tasks
+- Community sharing of successful builds
+</details>
+
+<details>
+<summary><b>💻 Developers</b></summary>
+
+- **AR/Mobile Developers**: Push the boundaries of practical AR applications
+- **ML Engineers**: Train models on real electronics datasets
+- **Embedded Engineers**: Contribute firmware templates and protocols
+- **Full-Stack Developers**: Build the community infrastructure (ERA IV)
+</details>
+
+<details>
+<summary><b>🏭 Makerspaces & Tech Labs</b></summary>
+
+- Training tool for new members
+- Standardized procedures across the facility
+- Documentation system for equipment
+- Educational workshops and events
+</details>
+
+## 📋 Supported Hardware
+
+iaRealidad currently supports the following development boards with pre-configured test points and diagnostics:
+
+| Board | Status | Test Points | Diagnostic Patterns | Firmware Support |
+|-------|--------|-------------|---------------------|------------------|
+| **Arduino Uno R3** | ✅ Full Support | 12+ | Power, Firmware, Short Circuit | Templates Available |
+| **ESP32 DevKit V1** | ✅ Full Support | 15+ | Power, WiFi, Bluetooth, Firmware | WiFi + BT Templates |
+| **ESP8266 NodeMCU V3** | ✅ Full Support | 10+ | Power, WiFi, Firmware | WiFi Templates |
+| **Generic MCU Boards** | 🔄 Partial | Manual Config | Basic Power Analysis | Custom Templates |
+
+**📚 See [HARDWARE_COMPATIBILITY.md](./HARDWARE_COMPATIBILITY.md) for detailed board configurations and [CONFIGURATION.md](./CONFIGURATION.md) for adding new boards.**
+
+### 🎯 Adding Your Board
+
+Contributing a board configuration takes ~30 minutes and helps the entire community. You need:
+1. Board schematic or pinout diagram
+2. Test point locations (VCC, GND, key signals)
+3. Expected voltage ranges
+4. Common failure modes (optional but valuable)
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md#adding-new-board-configurations) for step-by-step instructions.
 
 ## Features
 
@@ -102,6 +189,38 @@ A cross-platform AR (Augmented Reality) assistant for electronics repair, measur
 
 📚 **See [ERA_III_DIAGNOSTIC_GUIDE.md](./ERA_III_DIAGNOSTIC_GUIDE.md) for complete diagnostic capabilities documentation**
 
+## 🏗️ System Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     iaRealidad Platform                      │
+└─────────────────────────────────────────────────────────────┘
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        │                     │                     │
+   📱 Mobile AR          🖥️ Desktop            ☁️ Future Cloud
+   (iOS/Android)      (Win/macOS/Linux)        (ERA IV)
+        │                     │                     │
+   ┌────┴────┐           ┌────┴────┐         ┌─────┴─────┐
+   │         │           │         │         │           │
+  ERA I    ERA II      ERA III   Data      Community   API
+  AR Base  Sensing   Diagnostics Mgmt      Knowledge  Integration
+```
+
+### Module Interaction
+
+```
+Camera Feed → Vision Processing → Component Detection
+     ↓              ↓                     ↓
+  Overlays    ←  Mode Logic    →    Diagnostic Engine
+     ↓              ↓                     ↓
+  Display    ←  Data Service   →    Knowledge Base
+                    ↓
+              Case Management
+```
+
+**📚 Full technical details in [ARCHITECTURE.md](./ARCHITECTURE.md)**
+
 ## Technology Stack
 
 - **Framework**: React Native 0.73.2
@@ -137,6 +256,60 @@ A cross-platform AR (Augmented Reality) assistant for electronics repair, measur
   - React Native for macOS
 
 📚 See [PLATFORM_COMPATIBILITY.md](./PLATFORM_COMPATIBILITY.md) for detailed platform requirements and setup instructions.
+
+## 🚀 Quick Start Workflow
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Step 1: Choose Your Path                                   │
+└─────────────────────────────────────────────────────────────┘
+           │
+    ┌──────┴──────┬──────────────┬─────────────┐
+    │             │              │             │
+  📱 User      🔧 Hardware    💻 Developer  📚 Researcher
+    │             │              │             │
+    │             │              │             │
+  Install      Add Board      Fork Repo    Read Docs
+  & Run        Config         & Setup      & Analyze
+    │             │              │             │
+    ↓             ↓              ↓             ↓
+┌─────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐
+│Run App  │  │Document  │  │Pick ERA  │  │Study     │
+│Try Modes│→ │Failure   │→ │& Issue   │→ │Cases &   │
+│Learn    │  │Patterns  │  │Contribute│  │Patterns  │
+└─────────┘  └──────────┘  └──────────┘  └──────────┘
+```
+
+### For Users (5 minutes)
+```bash
+git clone https://github.com/Blackmvmba88/iaRealidad.git
+cd iaRealidad
+npm install
+npm run android  # or ios
+```
+Then: Select mode → Point camera → Follow AR guidance
+
+### For Contributors (10 minutes)
+```bash
+# 1. Fork & clone
+git clone https://github.com/YOUR-USERNAME/iaRealidad.git
+cd iaRealidad
+
+# 2. Install & verify
+npm install
+npm test
+
+# 3. Pick your area (see ROADMAP.md)
+# - ERA I: AR/UI improvements
+# - ERA II: ML/Sensing features  
+# - ERA III: Diagnostics/AI
+# - ERA IV: Community/Cloud
+
+# 4. Create feature branch
+git checkout -b feature/your-contribution
+```
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed contribution guidelines.
 
 ## Installation
 
@@ -288,6 +461,40 @@ Best for: Testing after repair/modification
 - Troubleshooting suggestions
 - Complete circuit validation
 
+## 📊 Feature Matrix
+
+| Feature | Mobile (iOS/Android) | Desktop (Win/macOS) | Status | ERA |
+|---------|---------------------|---------------------|--------|-----|
+| **Core AR Features** | | | | |
+| Component Identification | ✅ Full | 🔄 Limited | Implemented | I |
+| Real-time Overlays | ✅ Full | 🔄 Limited | Implemented | I |
+| Pin Labeling (VCC/GND) | ✅ Full | 🔄 Limited | Implemented | I |
+| Mode Switching | ✅ Full | ✅ Full | Implemented | I |
+| **Sensing Capabilities** | | | | |
+| Audio Analysis | ✅ Full | ✅ Full | Implemented | II |
+| Temperature Monitoring | ✅ Full | ✅ Full | Implemented | II |
+| Bluetooth Multimeter | ✅ Full | ✅ Full | Implemented | II |
+| UART/I2C/SPI | ✅ Full | ✅ Full | Implemented | II |
+| Anomaly Detection | ✅ Full | ✅ Full | Implemented | II |
+| Visual ML Recognition | 📋 Planned | 📋 Planned | In Progress | II |
+| **Diagnostic Intelligence** | | | | |
+| Failure Pattern Detection | ✅ Full | ✅ Full | Implemented | III |
+| Power Route Analysis | ✅ Full | ✅ Full | Implemented | III |
+| Repair Recommendations | ✅ Full | ✅ Full | Implemented | III |
+| Case Management | ✅ Full | ✅ Full | Implemented | III |
+| Historical Matching | ✅ Full | ✅ Full | Implemented | III |
+| Soldering Assistant | 📋 Planned | 📋 Planned | Roadmap | III |
+| **Creation & Firmware** | | | | |
+| Module Guides | ✅ Full | ✅ Full | Implemented | I |
+| Firmware Generation | ✅ Full | ✅ Full | Implemented | I |
+| Compatibility Checks | 📋 Planned | 📋 Planned | Roadmap | III |
+| **Community Features** | | | | |
+| Repair Database | 📋 Planned | 📋 Planned | Roadmap | IV |
+| Knowledge Sharing | 📋 Planned | 📋 Planned | Roadmap | IV |
+| Collaborative AR | 📋 Planned | ⛔ Not Planned | Roadmap | IV |
+
+**Legend**: ✅ Full Support | 🔄 Partial/Limited | 📋 Planned | ⛔ Not Planned
+
 ## Development
 
 ### Board Configurations
@@ -435,7 +642,157 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 
 ## Contributing
 
+We welcome contributions from all domains! The project's unique multi-domain nature means there's a place for everyone.
+
+### 🎯 Contribution Pathways
+
+<details>
+<summary><b>🎨 UI/UX Designers</b></summary>
+
+- Improve AR overlay clarity and aesthetics
+- Design mode-switching interfaces
+- Create icons and visual elements
+- Enhance accessibility features
+- Mobile vs desktop UX optimization
+
+**Entry Point**: Check issues labeled `ui`, `ux`, or `design`
+</details>
+
+<details>
+<summary><b>📱 Mobile/AR Developers</b></summary>
+
+- Enhance AR tracking and stability
+- Optimize camera performance
+- Implement advanced vision features
+- Platform-specific optimizations
+- React Native expertise
+
+**Entry Point**: ERA I (AR Base) and ERA II (Vision ML) - see [ROADMAP.md](./ROADMAP.md)
+</details>
+
+<details>
+<summary><b>🤖 ML/AI Engineers</b></summary>
+
+- Component recognition models
+- OCR for board text
+- Anomaly detection algorithms
+- Pattern matching optimization
+- Diagnostic intelligence
+
+**Entry Point**: ERA II (Sensing) and ERA III (Diagnostics) - see [ERA_II_SENSING_GUIDE.md](./ERA_II_SENSING_GUIDE.md)
+</details>
+
+<details>
+<summary><b>⚡ Electronics Engineers</b></summary>
+
+- Add board configurations
+- Contribute diagnostic patterns
+- Document failure modes
+- Create measurement procedures
+- Validate technical accuracy
+
+**Entry Point**: [HARDWARE_COMPATIBILITY.md](./HARDWARE_COMPATIBILITY.md) and [CONFIGURATION.md](./CONFIGURATION.md)
+</details>
+
+<details>
+<summary><b>💻 Embedded/Firmware Developers</b></summary>
+
+- Create firmware templates
+- Add protocol implementations
+- Contribute bootloader patterns
+- Document communication interfaces
+- ESP32/Arduino expertise
+
+**Entry Point**: `src/services/firmwareGeneratorService.ts` and [NEW_FEATURES_GUIDE.md](./NEW_FEATURES_GUIDE.md)
+</details>
+
+<details>
+<summary><b>🏗️ Backend/Infrastructure</b></summary>
+
+- Design cloud architecture (ERA IV)
+- Build API infrastructure
+- Implement data storage
+- Create sync mechanisms
+- Community platform
+
+**Entry Point**: ERA IV planning - see [ROADMAP.md](./ROADMAP.md#era-iv--ecosistema-y-memoria-red--comunidad)
+</details>
+
+<details>
+<summary><b>📚 Technical Writers</b></summary>
+
+- Improve documentation
+- Create tutorials and guides
+- Translate content
+- Write case studies
+- API documentation
+
+**Entry Point**: Any `.md` file - check issues labeled `documentation`
+</details>
+
+<details>
+<summary><b>🧪 QA/Testing</b></summary>
+
+- Write test cases
+- Perform device testing
+- Validate board configurations
+- Test diagnostic accuracy
+- Cross-platform verification
+
+**Entry Point**: `__tests__/` directory and [VERIFICATION.md](./VERIFICATION.md)
+</details>
+
+### 🚀 Getting Started as a Contributor
+
+1. **Explore the codebase**: Start with [PROJECT_OVERVIEW.md](./PROJECT_OVERVIEW.md)
+2. **Pick your ERA**: Check [ROADMAP.md](./ROADMAP.md) to see what's being worked on
+3. **Find an issue**: Look for `good-first-issue` or `help-wanted` labels
+4. **Read the guides**: See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines
+5. **Join the discussion**: Open an issue to discuss your ideas before major changes
+
+### 📖 Essential Reading for Contributors
+
+| Document | Purpose | When to Read |
+|----------|---------|--------------|
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guidelines | Before your first PR |
+| [ROADMAP.md](./ROADMAP.md) | Project vision & phases | To understand long-term goals |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | Technical design | Before code changes |
+| [EXAMPLES.md](./EXAMPLES.md) | Usage examples | To understand user workflows |
+| [ERA_II_SENSING_GUIDE.md](./ERA_II_SENSING_GUIDE.md) | Sensing system | For sensor/ML work |
+| [ERA_III_DIAGNOSTIC_GUIDE.md](./ERA_III_DIAGNOSTIC_GUIDE.md) | Diagnostic engine | For AI/diagnostic work |
+
 Contributions are welcome! Please feel free to submit pull requests or open issues for bugs and feature requests.
+
+## 🌍 Community & Support
+
+### Getting Help
+
+- **📖 Documentation**: Start with [QUICKSTART.md](./QUICKSTART.md) and [FAQ.md](./FAQ.md)
+- **🐛 Bug Reports**: Open an issue with the `bug` label
+- **💡 Feature Requests**: Open an issue with the `enhancement` label
+- **❓ Questions**: Open an issue with the `question` label
+
+### Project Communication
+
+- **Issues**: Primary channel for bugs, features, and discussions
+- **Pull Requests**: Code contributions and technical discussions
+- **Discussions**: Coming soon in ERA IV (community platform)
+
+### Stay Updated
+
+- **⭐ Star this repo** to follow development
+- **👁️ Watch releases** for new versions
+- **📋 Check [ROADMAP.md](./ROADMAP.md)** for upcoming features
+- **📝 Read [CHANGELOG.md](./CHANGELOG.md)** for release notes
+
+### Recognition
+
+Contributors are recognized in:
+- GitHub contributors list
+- Release notes for their contributions
+- Special mentions for major features
+
+We value all contributions, whether code, documentation, testing, or community support!
 
 ## License
 
