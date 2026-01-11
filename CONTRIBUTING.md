@@ -227,6 +227,100 @@ export const yourModuleGuide: ModuleGuide = {
 };
 ```
 
+### Adding New Board Configurations
+
+Board configurations are one of the most valuable contributions! Each configuration helps the entire community work with that hardware.
+
+**What You Need:**
+1. Board schematic or detailed pinout diagram
+2. Component locations (U1, R1, C1, etc.)
+3. Test point locations (VCC, GND, critical signals)
+4. Expected voltage ranges for each test point
+5. Common failure modes (optional but highly valuable)
+
+**Steps to Add a Board:**
+
+1. Edit `src/config/boardConfigurations.ts`:
+
+```typescript
+export const yourBoard: BoardConfiguration = {
+  id: 'board_your_board',
+  name: 'Your Board Name',
+  manufacturer: 'Manufacturer',
+  model: 'Model Number',
+  
+  // Component definitions
+  components: [
+    {
+      id: 'U1',
+      name: 'Main MCU',
+      type: 'ic',
+      position: {x: 150, y: 200},
+      description: 'ATmega328P or similar',
+    },
+    // ... more components
+  ],
+  
+  // Test points with expected values
+  testPoints: [
+    {
+      id: 'tp_vcc',
+      name: 'VCC Input',
+      position: {x: 50, y: 50},
+      expectedVoltage: 5.0,
+      tolerance: 0.25, // ±0.25V
+      description: 'Main power supply',
+    },
+    // ... more test points
+  ],
+  
+  // Power specifications
+  powerRequirements: {
+    voltage: {min: 4.75, typical: 5.0, max: 5.25},
+    current: {min: 0, typical: 50, max: 500}, // mA
+  },
+};
+```
+
+2. Add tests in `__tests__/boardConfigurations.test.ts`:
+
+```typescript
+describe('Your Board Configuration', () => {
+  it('should have valid test points', () => {
+    expect(yourBoard.testPoints.length).toBeGreaterThan(0);
+    yourBoard.testPoints.forEach(tp => {
+      expect(tp.expectedVoltage).toBeDefined();
+      expect(tp.tolerance).toBeGreaterThan(0);
+    });
+  });
+});
+```
+
+3. Document common failures in `src/services/diagnosticService.ts`:
+
+```typescript
+const yourBoardFailurePattern: FailurePattern = {
+  id: 'failure_your_board_power',
+  name: 'Your Board Power Failure',
+  boardTypes: ['board_your_board'],
+  symptoms: ['no_power', 'no_bootup'],
+  // ... diagnostic info
+};
+```
+
+4. Update [HARDWARE_COMPATIBILITY.md](./HARDWARE_COMPATIBILITY.md) with the new board
+
+**Validation Checklist:**
+- [ ] All voltages verified with actual hardware
+- [ ] Tolerance ranges tested (not just guessed)
+- [ ] Component positions accurate
+- [ ] Test points accessible
+- [ ] Common failures documented
+- [ ] Tests passing
+- [ ] Documentation updated
+
+This typically takes 30-60 minutes and helps everyone working with that board!
+
 ## Code Review Process
 
 1. PRs require review before merging
