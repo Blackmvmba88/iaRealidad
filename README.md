@@ -105,20 +105,34 @@ A cross-platform AR (Augmented Reality) assistant for electronics repair, measur
 - **Camera/AR**: react-native-vision-camera
 - **Graphics**: react-native-svg for overlays
 - **Navigation**: React Navigation 6
-- **Cross-platform**: iOS and Android
+- **Cross-platform**: Android, iOS, Windows, macOS, and Linux (planned)
 
 ## Prerequisites
 
 - Node.js >= 18
 - npm or yarn
-- For iOS development:
-  - macOS
-  - Xcode 14+
-  - CocoaPods
-- For Android development:
+
+### Platform-Specific Requirements
+
+- **For Android development**:
   - Android Studio
   - Android SDK (API level 21+)
   - Java Development Kit (JDK) 11+
+- **For iOS development**:
+  - macOS
+  - Xcode 14+
+  - CocoaPods
+- **For Windows development**:
+  - Windows 10 version 1809+
+  - Visual Studio 2019+ with C++ tools
+  - React Native for Windows
+- **For macOS development**:
+  - macOS 10.14+
+  - Xcode 14+
+  - CocoaPods
+  - React Native for macOS
+
+📚 See [PLATFORM_COMPATIBILITY.md](./PLATFORM_COMPATIBILITY.md) for detailed platform requirements and setup instructions.
 
 ## Installation
 
@@ -158,12 +172,30 @@ npm run ios
 yarn ios
 ```
 
+### Windows
+```bash
+npm run windows
+# or
+yarn windows
+```
+
+### macOS
+```bash
+npm run macos
+# or
+yarn macos
+```
+
 ### Start Metro Bundler
 ```bash
 npm start
 # or
 yarn start
 ```
+
+> **Note**: Desktop platforms (Windows, macOS) are in development. AR features work best on mobile devices (Android, iOS). Desktop versions will have limited AR capabilities but full diagnostic and case management features.
+
+📚 For detailed platform-specific instructions, see [PLATFORM_COMPATIBILITY.md](./PLATFORM_COMPATIBILITY.md)
 
 ## Permissions
 
