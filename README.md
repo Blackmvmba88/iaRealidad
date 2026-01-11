@@ -385,7 +385,16 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 
 ### Recently Added Features
 
-#### ERA III: Diagnostic Intelligence System 🔥 **NEW!**
+#### Cross-Platform Desktop Support 🆕 **NEW!**
+- **Multi-Platform**: Now supports Android, iOS, Windows, macOS, and Linux (planned)
+- **Platform Utilities**: Smart platform detection and conditional feature rendering
+- **Desktop Compatibility**: Full diagnostic and case management on desktop platforms
+- **Responsive UI**: Adapts to mobile and desktop screen sizes
+- **Platform-Specific Features**: AR on mobile, enhanced diagnostics on desktop
+- 217 comprehensive tests (all passing)
+- Complete documentation in PLATFORM_COMPATIBILITY.md and PLATFORM_EXAMPLES.md
+
+#### ERA III: Diagnostic Intelligence System 🔥
 - **Diagnostic Engine**: Automatic failure pattern detection with 5 pre-loaded patterns
 - **Inference Rules**: Logic-based reasoning from symptoms to diagnosis
 - **Power Route Analysis**: Traces power failures through the circuit
@@ -394,7 +403,6 @@ See [ROADMAP.md](./ROADMAP.md) for the complete list of planned features across 
 - **Historical Pattern Matching**: Find similar cases with similarity scoring
 - **Learning System**: Tracks success rates, costs, and times for continuous improvement
 - **Knowledge Base**: Pre-loaded with ESP32/Arduino common failures and repair procedures
-- 42 comprehensive tests (all passing)
 - Complete documentation in ERA_III_DIAGNOSTIC_GUIDE.md
 
 #### Board Configuration System

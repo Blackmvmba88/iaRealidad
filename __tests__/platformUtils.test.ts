@@ -2,7 +2,7 @@
  * Platform Utilities Tests
  */
 
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import {
   getPlatformInfo,
   isMobile,
@@ -11,7 +11,6 @@ import {
   isIOS,
   isWindows,
   isMacOS,
-  isLinux,
   selectPlatform,
   getCameraPermissionMessage,
   isCameraAvailable,

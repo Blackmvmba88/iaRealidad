@@ -1,11 +1,11 @@
 /**
  * Platform Utilities
- * 
+ *
  * Helper functions for cross-platform compatibility across
  * Android, iOS, Windows, macOS, and Linux (via React Native for Web/Desktop)
  */
 
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 
 export interface PlatformInfo {
   isWeb: boolean;
@@ -26,16 +26,18 @@ export interface PlatformInfo {
  */
 export const getPlatformInfo = (): PlatformInfo => {
   const OS = Platform.OS;
-  
+
   const isWeb = OS === 'web';
   const isAndroid = OS === 'android';
   const isIOS = OS === 'ios';
   const isWindows = OS === 'windows';
   const isMacOS = OS === 'macos';
-  
+
   // For Linux, we need to check if it's running on web and detect Linux user agent
-  const isLinux = isWeb && typeof navigator !== 'undefined' && 
-    /Linux/i.test(navigator.userAgent) && 
+  const isLinux =
+    isWeb &&
+    typeof navigator !== 'undefined' &&
+    /Linux/i.test(navigator.userAgent) &&
     !/Android/i.test(navigator.userAgent);
 
   const isMobile = isAndroid || isIOS;
@@ -69,10 +71,14 @@ export const isMobile = (): boolean => {
  */
 export const isDesktop = (): boolean => {
   const OS = Platform.OS;
-  return OS === 'windows' || OS === 'macos' || 
-    (OS === 'web' && typeof navigator !== 'undefined' && 
-      /Linux/i.test(navigator.userAgent) && 
-      !/Android/i.test(navigator.userAgent));
+  return (
+    OS === 'windows' ||
+    OS === 'macos' ||
+    (OS === 'web' &&
+      typeof navigator !== 'undefined' &&
+      /Linux/i.test(navigator.userAgent) &&
+      !/Android/i.test(navigator.userAgent))
+  );
 };
 
 /**
@@ -108,9 +114,12 @@ export const isMacOS = (): boolean => {
  */
 export const isLinux = (): boolean => {
   const OS = Platform.OS;
-  return OS === 'web' && typeof navigator !== 'undefined' && 
-    /Linux/i.test(navigator.userAgent) && 
-    !/Android/i.test(navigator.userAgent);
+  return (
+    OS === 'web' &&
+    typeof navigator !== 'undefined' &&
+    /Linux/i.test(navigator.userAgent) &&
+    !/Android/i.test(navigator.userAgent)
+  );
 };
 
 /**
@@ -128,13 +137,27 @@ export const selectPlatform = <T>(config: {
 }): T => {
   const platform = getPlatformInfo();
 
-  if (config.android && platform.isAndroid) return config.android;
-  if (config.ios && platform.isIOS) return config.ios;
-  if (config.windows && platform.isWindows) return config.windows;
-  if (config.macos && platform.isMacOS) return config.macos;
-  if (config.linux && platform.isLinux) return config.linux;
-  if (config.desktop && platform.isDesktop) return config.desktop;
-  if (config.mobile && platform.isMobile) return config.mobile;
+  if (config.android && platform.isAndroid) {
+    return config.android;
+  }
+  if (config.ios && platform.isIOS) {
+    return config.ios;
+  }
+  if (config.windows && platform.isWindows) {
+    return config.windows;
+  }
+  if (config.macos && platform.isMacOS) {
+    return config.macos;
+  }
+  if (config.linux && platform.isLinux) {
+    return config.linux;
+  }
+  if (config.desktop && platform.isDesktop) {
+    return config.desktop;
+  }
+  if (config.mobile && platform.isMobile) {
+    return config.mobile;
+  }
 
   return config.default;
 };
@@ -144,9 +167,11 @@ export const selectPlatform = <T>(config: {
  */
 export const getCameraPermissionMessage = (): string => {
   return selectPlatform({
-    android: 'This app requires camera access to provide AR-guided electronics repair assistance.',
+    android:
+      'This app requires camera access to provide AR-guided electronics repair assistance.',
     ios: 'This app requires camera access to provide AR-guided electronics repair assistance.',
-    desktop: 'This app requires webcam access to provide AR-guided electronics repair assistance.',
+    desktop:
+      'This app requires webcam access to provide AR-guided electronics repair assistance.',
     default: 'Camera access is required for AR features.',
   });
 };
@@ -165,12 +190,22 @@ export const isCameraAvailable = (): boolean => {
  */
 export const getPlatformDisplayName = (): string => {
   const platform = getPlatformInfo();
-  
-  if (platform.isAndroid) return 'Android';
-  if (platform.isIOS) return 'iOS';
-  if (platform.isWindows) return 'Windows';
-  if (platform.isMacOS) return 'macOS';
-  if (platform.isLinux) return 'Linux';
-  
+
+  if (platform.isAndroid) {
+    return 'Android';
+  }
+  if (platform.isIOS) {
+    return 'iOS';
+  }
+  if (platform.isWindows) {
+    return 'Windows';
+  }
+  if (platform.isMacOS) {
+    return 'macOS';
+  }
+  if (platform.isLinux) {
+    return 'Linux';
+  }
+
   return 'Unknown';
 };
