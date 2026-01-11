@@ -21,17 +21,35 @@ export interface PlatformInfo {
   version?: string | number;
 }
 
+// Cache Linux detection result to avoid repeated navigator checks
+let cachedIsLinux: boolean | null = null;
+
 /**
  * Check if the app is running on Linux
+ * Result is cached to avoid repeated DOM/navigator checks
  */
 export const isLinux = (): boolean => {
+  if (cachedIsLinux !== null) {
+    return cachedIsLinux;
+  }
+
   const OS = Platform.OS;
-  return (
-    OS === 'web' &&
-    typeof navigator !== 'undefined' &&
-    /Linux/i.test(navigator.userAgent) &&
-    !/Android/i.test(navigator.userAgent)
-  );
+  if (OS !== 'web') {
+    cachedIsLinux = false;
+    return false;
+  }
+
+  try {
+    cachedIsLinux =
+      typeof navigator !== 'undefined' &&
+      /Linux/i.test(navigator.userAgent) &&
+      !/Android/i.test(navigator.userAgent);
+  } catch (error) {
+    // If navigator is not accessible, assume not Linux
+    cachedIsLinux = false;
+  }
+
+  return cachedIsLinux;
 };
 
 /**
