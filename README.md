@@ -6,10 +6,11 @@
 [![ERA I](https://img.shields.io/badge/ERA%20I-60%25-yellow.svg)](./ROADMAP.md)
 [![ERA II](https://img.shields.io/badge/ERA%20II-40%25-orange.svg)](./ERA_II_SENSING_GUIDE.md)
 [![ERA III](https://img.shields.io/badge/ERA%20III-50%25-red.svg)](./ERA_III_DIAGNOSTIC_GUIDE.md)
+[![ERA IV](https://img.shields.io/badge/ERA%20IV-25%25-blue.svg)](./ERA_IV_FEATURES_GUIDE.md)
 
-A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance with **intelligent diagnostic capabilities**.
+A cross-platform AR (Augmented Reality) assistant for electronics repair, measurement, and creation. This app uses the device camera to overlay real-time instructions on circuit boards, highlighting components, pins (GND/VCC), test points, and providing step-by-step guidance with **intelligent diagnostic capabilities** and **community knowledge sharing**.
 
-> 📍 **Current Version**: [v0.0.1 "El Despertar"](./CHANGELOG.md) | **Status**: ERA I - 60% Complete | ERA II - 40% Complete | **ERA III - 50% Complete** 🔥 | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
+> 📍 **Current Version**: [v0.0.1 "El Despertar"](./CHANGELOG.md) | **Status**: ERA I - 60% | ERA II - 40% | ERA III - 50% | **ERA IV - 25%** 🔥 | See [ROADMAP.md](./ROADMAP.md) for the complete development plan
 
 ## 🎯 Why This Project?
 
@@ -189,6 +190,35 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md#adding-new-board-configurations) for ste
 
 📚 **See [ERA_III_DIAGNOSTIC_GUIDE.md](./ERA_III_DIAGNOSTIC_GUIDE.md) for complete diagnostic capabilities documentation**
 
+### 🌐 Community & Knowledge Sharing (ERA IV - NEW!) 🔥
+**The app now enables offline community knowledge sharing!**
+
+#### Case Export/Import
+- **JSON Export**: Export repair cases for backup or sharing
+- **Batch Operations**: Export/import multiple cases at once
+- **Advanced Query**: Filter, sort, and search through repair history
+- **Statistics**: Track success rates, costs, and repair times
+
+#### Community SDK
+- **Board Registry**: Add new board configurations via JSON/YAML
+- **Pattern Registry**: Contribute failure patterns without code changes
+- **Plugin System**: Extend iaRealidad with community contributions
+- **Validation**: Automatic validation of configurations
+
+#### Offline Sharing
+- **Case Packages**: Bundle multiple cases for sharing
+- **Multiple Formats**: JSON, Data URI, QR-friendly formats
+- **Preview Mode**: Review packages before importing
+- **No Cloud Required**: Share knowledge without internet
+
+#### Knowledge Base Navigation
+- **Query System**: Find cases by board, pattern, cost, date
+- **Similar Cases**: Discover related repairs from history
+- **Statistics Dashboard**: Comprehensive analytics on repairs
+- **Tag Search**: Organize and find cases by custom tags
+
+📚 **See [ERA_IV_FEATURES_GUIDE.md](./ERA_IV_FEATURES_GUIDE.md) for complete community features documentation**
+
 ## 🏗️ System Architecture
 
 ```
@@ -199,12 +229,13 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md#adding-new-board-configurations) for ste
         ┌─────────────────────┼─────────────────────┐
         │                     │                     │
    📱 Mobile AR          🖥️ Desktop            ☁️ Future Cloud
-   (iOS/Android)      (Win/macOS/Linux)        (ERA IV)
+   (iOS/Android)      (Win/macOS/Linux)        (ERA IV+)
         │                     │                     │
    ┌────┴────┐           ┌────┴────┐         ┌─────┴─────┐
    │         │           │         │         │           │
-  ERA I    ERA II      ERA III   Data      Community   API
-  AR Base  Sensing   Diagnostics Mgmt      Knowledge  Integration
+  ERA I    ERA II      ERA III   ERA IV    Future      API
+  AR Base  Sensing   Diagnostics  SDK     Cloud     Integration
+                                          Sync
 ```
 
 ### Module Interaction
@@ -215,8 +246,10 @@ Camera Feed → Vision Processing → Component Detection
   Overlays    ←  Mode Logic    →    Diagnostic Engine
      ↓              ↓                     ↓
   Display    ←  Data Service   →    Knowledge Base
-                    ↓
-              Case Management
+                    ↓                     ↓
+              Case Management  ←→   Registry Service
+                    ↓                     ↓
+              Share Service    ←→   Community SDK
 ```
 
 **📚 Full technical details in [ARCHITECTURE.md](./ARCHITECTURE.md)**
@@ -545,6 +578,73 @@ The app uses AsyncStorage for persistent local data storage:
 - User settings
 
 All data is automatically saved and restored between sessions. See `src/services/storageService.ts`.
+
+### Community SDK
+
+The app includes a plugin-based SDK for community contributions:
+
+#### Adding Board Configurations
+```typescript
+import registryService from './services/registryService';
+
+const boardConfig = `{
+  "name": "My Board",
+  "board": {"id": "my_board", ...},
+  "testPoints": [...]
+}`;
+
+registryService.addBoardConfig(boardConfig, 'user', 'YourName');
+```
+
+See `examples/boards/` for complete examples.
+
+#### Adding Failure Patterns
+```typescript
+const failurePattern = `{
+  "name": "My Pattern",
+  "pattern": {"id": "my_pattern", ...},
+  "symptoms": [...],
+  "diagnosticSteps": [...]
+}`;
+
+registryService.addFailurePattern(failurePattern, 'community');
+```
+
+See `examples/failure-patterns/` for complete examples.
+
+### Case Management & Sharing
+
+#### Query and Export Cases
+```typescript
+import caseManagementService from './services/caseManagementService';
+
+// Query cases
+const cases = caseManagementService.queryCases({
+  boardType: 'ESP32',
+  repairSuccess: true,
+  sortBy: 'date'
+});
+
+// Export cases
+const exported = caseManagementService.exportAllCases();
+```
+
+#### Share Cases
+```typescript
+import shareCaseService from './services/shareCaseService';
+
+// Create shareable link
+const link = shareCaseService.generateShareLink(caseId);
+
+// Share multiple cases
+const pkg = shareCaseService.shareCases(
+  ['case1', 'case2'],
+  'Author',
+  'Description'
+);
+```
+
+See [ERA_IV_FEATURES_GUIDE.md](./ERA_IV_FEATURES_GUIDE.md) for complete documentation.
 
 ### Adding New Components
 Edit `src/services/dataService.ts` to add new component definitions, measurement points, or module guides.
