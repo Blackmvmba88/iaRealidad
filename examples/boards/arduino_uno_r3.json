@@ -1,0 +1,92 @@
+{
+  "name": "Arduino Uno R3 Configuration",
+  "version": "1.0",
+  "description": "Complete board configuration for Arduino Uno R3",
+  "board": {
+    "id": "arduino_uno_r3",
+    "manufacturer": "Arduino",
+    "model": "Uno R3",
+    "microcontroller": "ATmega328P"
+  },
+  "specifications": {
+    "voltage": {
+      "input": {
+        "min": 7.0,
+        "max": 12.0,
+        "typical": 9.0
+      },
+      "output": {
+        "min": 4.8,
+        "max": 5.2,
+        "typical": 5.0
+      }
+    },
+    "current": {
+      "typical": 50,
+      "max": 200
+    }
+  },
+  "testPoints": [
+    {
+      "id": "tp_vin",
+      "name": "VIN",
+      "type": "VCC",
+      "position": {"x": 50, "y": 80},
+      "expectedVoltage": 9.0,
+      "tolerance": 2.0
+    },
+    {
+      "id": "tp_5v",
+      "name": "5V Output",
+      "type": "VCC",
+      "position": {"x": 100, "y": 80},
+      "expectedVoltage": 5.0,
+      "tolerance": 0.25
+    },
+    {
+      "id": "tp_3v3",
+      "name": "3.3V Output",
+      "type": "VCC",
+      "position": {"x": 150, "y": 80},
+      "expectedVoltage": 3.3,
+      "tolerance": 0.1
+    },
+    {
+      "id": "tp_gnd",
+      "name": "Ground",
+      "type": "GND",
+      "position": {"x": 120, "y": 150},
+      "expectedVoltage": 0.0,
+      "tolerance": 0.0
+    }
+  ],
+  "components": [
+    {
+      "id": "u1",
+      "name": "ATmega328P",
+      "type": "microcontroller",
+      "position": {"x": 200, "y": 200},
+      "description": "Main microcontroller"
+    },
+    {
+      "id": "u2",
+      "name": "ATmega16U2",
+      "type": "ic",
+      "position": {"x": 300, "y": 100},
+      "description": "USB to serial converter"
+    },
+    {
+      "id": "u3",
+      "name": "NCP1117ST50T3G",
+      "type": "regulator",
+      "position": {"x": 100, "y": 100},
+      "description": "5V voltage regulator"
+    }
+  ],
+  "commonFailures": [
+    "voltage_regulator_failure",
+    "firmware_corruption",
+    "microcontroller_dead"
+  ],
+  "tags": ["arduino", "atmega328p", "beginner", "maker"]
+}

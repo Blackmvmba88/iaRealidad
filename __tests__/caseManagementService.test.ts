@@ -859,4 +859,440 @@ describe('CaseManagementService', () => {
       expect(imported?.caseNumber).toBe(original.caseNumber);
     });
   });
+
+  describe('Batch Export/Import', () => {
+    it('should export all cases', () => {
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
+
+      const diagnosticResult: DiagnosticResult = {
+        id: 'diag_1',
+        timestamp: new Date().toISOString(),
+        symptoms,
+        failurePattern: 'no_power',
+        confidence: 75,
+        probableCauses: [],
+        affectedComponents: [],
+        recommendations: [],
+        estimatedDifficulty: 'easy',
+        estimatedTime: 15,
+        estimatedCost: 0.5,
+      };
+
+      caseManagementService.createCase('Board 1', symptoms, diagnosticResult);
+      caseManagementService.createCase('Board 2', symptoms, diagnosticResult);
+
+      const exported = caseManagementService.exportAllCases();
+      const data = JSON.parse(exported);
+
+      expect(data.version).toBe('1.0');
+      expect(data.totalCases).toBe(2);
+      expect(data.cases).toHaveLength(2);
+      expect(data.exportDate).toBeDefined();
+    });
+
+    it('should export selected cases', () => {
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
+
+      const diagnosticResult: DiagnosticResult = {
+        id: 'diag_1',
+        timestamp: new Date().toISOString(),
+        symptoms,
+        failurePattern: 'no_power',
+        confidence: 75,
+        probableCauses: [],
+        affectedComponents: [],
+        recommendations: [],
+        estimatedDifficulty: 'easy',
+        estimatedTime: 15,
+        estimatedCost: 0.5,
+      };
+
+      const case1 = caseManagementService.createCase(
+        'Board 1',
+        symptoms,
+        diagnosticResult,
+      );
+      const case2 = caseManagementService.createCase(
+        'Board 2',
+        symptoms,
+        diagnosticResult,
+      );
+      caseManagementService.createCase('Board 3', symptoms, diagnosticResult);
+
+      const exported = caseManagementService.exportCases([case1.id, case2.id]);
+      const data = JSON.parse(exported);
+
+      expect(data.totalCases).toBe(2);
+      expect(data.cases).toHaveLength(2);
+    });
+
+    it('should import multiple cases', () => {
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
+
+      const diagnosticResult: DiagnosticResult = {
+        id: 'diag_1',
+        timestamp: new Date().toISOString(),
+        symptoms,
+        failurePattern: 'no_power',
+        confidence: 75,
+        probableCauses: [],
+        affectedComponents: [],
+        recommendations: [],
+        estimatedDifficulty: 'easy',
+        estimatedTime: 15,
+        estimatedCost: 0.5,
+      };
+
+      caseManagementService.createCase('Board 1', symptoms, diagnosticResult);
+      caseManagementService.createCase('Board 2', symptoms, diagnosticResult);
+
+      const exported = caseManagementService.exportAllCases();
+      caseManagementService.clearAllCases();
+
+      const result = caseManagementService.importCases(exported);
+
+      expect(result.imported).toBe(2);
+      expect(result.failed).toBe(0);
+      expect(result.cases).toHaveLength(2);
+      expect(caseManagementService.getTotalCases()).toBe(2);
+    });
+
+    it('should handle import failures gracefully', () => {
+      const invalidJson = 'invalid json';
+
+      const result = caseManagementService.importCases(invalidJson);
+
+      expect(result.imported).toBe(0);
+      expect(result.failed).toBe(1);
+      expect(result.cases).toHaveLength(0);
+    });
+  });
+
+  describe('Advanced Query', () => {
+    beforeEach(() => {
+      const symptoms1: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'No voltage',
+          severity: 'critical',
+        },
+      ];
+
+      const symptoms2: Symptom[] = [
+        {
+          id: 'symptom_2',
+          type: 'low_voltage',
+          description: 'Low voltage',
+          severity: 'high',
+        },
+      ];
+
+      const diagnosticResult1: DiagnosticResult = {
+        id: 'diag_1',
+        timestamp: new Date().toISOString(),
+        symptoms: symptoms1,
+        failurePattern: 'voltage_regulator_failure',
+        confidence: 85,
+        probableCauses: [],
+        affectedComponents: [],
+        recommendations: [],
+        estimatedDifficulty: 'medium',
+        estimatedTime: 30,
+        estimatedCost: 2.0,
+      };
+
+      const diagnosticResult2: DiagnosticResult = {
+        id: 'diag_2',
+        timestamp: new Date().toISOString(),
+        symptoms: symptoms2,
+        failurePattern: 'power_supply_failure',
+        confidence: 75,
+        probableCauses: [],
+        affectedComponents: [],
+        recommendations: [],
+        estimatedDifficulty: 'easy',
+        estimatedTime: 15,
+        estimatedCost: 1.0,
+      };
+
+      const case1 = caseManagementService.createCase(
+        'ESP32 DevKit',
+        symptoms1,
+        diagnosticResult1,
+      );
+
+      const case2 = caseManagementService.createCase(
+        'Arduino Uno',
+        symptoms2,
+        diagnosticResult2,
+      );
+
+      // Mark case1 as successful
+      caseManagementService.completeCase(
+        case1.id,
+        {
+          id: 'test_1',
+          name: 'Test',
+          description: 'Test',
+          measurementPoints: [],
+          passCriteria: 'Pass',
+          failureActions: [],
+        },
+        {
+          id: 'result_1',
+          timestamp: new Date().toISOString(),
+          testId: 'test_1',
+          testName: 'Test',
+          passed: true,
+          results: [],
+        },
+      );
+    });
+
+    it('should filter by board type', () => {
+      const results = caseManagementService.queryCases({
+        boardType: 'ESP32',
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].boardType).toContain('ESP32');
+    });
+
+    it('should filter by failure pattern', () => {
+      const results = caseManagementService.queryCases({
+        failurePattern: 'voltage_regulator_failure',
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].failurePattern).toBe('voltage_regulator_failure');
+    });
+
+    it('should filter by repair success', () => {
+      const results = caseManagementService.queryCases({
+        repairSuccess: true,
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].repairSuccess).toBe(true);
+    });
+
+    it('should filter by cost range', () => {
+      const results = caseManagementService.queryCases({
+        minCost: 0.5,
+        maxCost: 1.5,
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].estimatedCost).toBeLessThanOrEqual(1.5);
+    });
+
+    it('should sort by case number ascending', () => {
+      const results = caseManagementService.queryCases({
+        sortBy: 'caseNumber',
+        sortOrder: 'asc',
+      });
+
+      expect(results[0].caseNumber).toBeLessThan(results[1].caseNumber);
+    });
+
+    it('should sort by cost descending', () => {
+      const results = caseManagementService.queryCases({
+        sortBy: 'cost',
+        sortOrder: 'desc',
+      });
+
+      expect(results[0].estimatedCost).toBeGreaterThanOrEqual(
+        results[1].estimatedCost,
+      );
+    });
+
+    it('should paginate results', () => {
+      const page1 = caseManagementService.queryCases({
+        limit: 1,
+        offset: 0,
+      });
+
+      const page2 = caseManagementService.queryCases({
+        limit: 1,
+        offset: 1,
+      });
+
+      expect(page1).toHaveLength(1);
+      expect(page2).toHaveLength(1);
+      expect(page1[0].id).not.toBe(page2[0].id);
+    });
+
+    it('should filter by tags', () => {
+      const results = caseManagementService.queryCases({
+        tags: ['voltage_regulator_failure'],
+      });
+
+      expect(results.length).toBeGreaterThan(0);
+    });
+
+    it('should combine multiple filters', () => {
+      const results = caseManagementService.queryCases({
+        boardType: 'ESP32',
+        repairSuccess: true,
+        sortBy: 'date',
+        sortOrder: 'desc',
+      });
+
+      expect(results).toHaveLength(1);
+      expect(results[0].boardType).toContain('ESP32');
+      expect(results[0].repairSuccess).toBe(true);
+    });
+  });
+
+  describe('Case Statistics', () => {
+    beforeEach(() => {
+      const symptoms: Symptom[] = [
+        {
+          id: 'symptom_1',
+          type: 'no_voltage',
+          description: 'Test',
+          severity: 'high',
+        },
+      ];
+
+      const diagnosticResult: DiagnosticResult = {
+        id: 'diag_1',
+        timestamp: new Date().toISOString(),
+        symptoms,
+        failurePattern: 'voltage_regulator_failure',
+        confidence: 85,
+        probableCauses: [],
+        affectedComponents: [],
+        recommendations: [],
+        estimatedDifficulty: 'medium',
+        estimatedTime: 30,
+        estimatedCost: 2.0,
+      };
+
+      const case1 = caseManagementService.createCase(
+        'ESP32 DevKit',
+        symptoms,
+        diagnosticResult,
+      );
+
+      const case2 = caseManagementService.createCase(
+        'Arduino Uno',
+        symptoms,
+        diagnosticResult,
+      );
+
+      // Complete case1 successfully
+      caseManagementService.completeCase(
+        case1.id,
+        {
+          id: 'test_1',
+          name: 'Test',
+          description: 'Test',
+          measurementPoints: [],
+          passCriteria: 'Pass',
+          failureActions: [],
+        },
+        {
+          id: 'result_1',
+          timestamp: new Date().toISOString(),
+          testId: 'test_1',
+          testName: 'Test',
+          passed: true,
+          results: [],
+        },
+        45,
+      );
+
+      // Add actual cost
+      caseManagementService.recordComponentReplacement(case1.id, {
+        id: 'repl_1',
+        componentId: 'reg_1',
+        componentType: 'regulator',
+        reason: 'Failed',
+        cost: 1.5,
+      });
+
+      // Complete case2 unsuccessfully
+      caseManagementService.completeCase(
+        case2.id,
+        {
+          id: 'test_2',
+          name: 'Test',
+          description: 'Test',
+          measurementPoints: [],
+          passCriteria: 'Pass',
+          failureActions: [],
+        },
+        {
+          id: 'result_2',
+          timestamp: new Date().toISOString(),
+          testId: 'test_2',
+          testName: 'Test',
+          passed: false,
+          results: [],
+        },
+        30,
+      );
+    });
+
+    it('should calculate comprehensive statistics', () => {
+      const stats = caseManagementService.getCaseStatistics();
+
+      expect(stats.totalCases).toBe(2);
+      expect(stats.successfulRepairs).toBe(1);
+      expect(stats.failedRepairs).toBe(1);
+      expect(stats.successRate).toBe(50);
+      expect(stats.totalCost).toBe(1.5);
+      expect(stats.averageCost).toBe(1.5);
+      expect(stats.totalTime).toBe(75);
+      expect(stats.averageTime).toBe(37.5);
+    });
+
+    it('should identify most common failure', () => {
+      const stats = caseManagementService.getCaseStatistics();
+
+      expect(stats.mostCommonFailure).toBe('voltage_regulator_failure');
+    });
+
+    it('should identify most common board', () => {
+      const stats = caseManagementService.getCaseStatistics();
+
+      expect(stats.mostCommonBoard).toBeDefined();
+    });
+
+    it('should handle empty statistics', () => {
+      caseManagementService.clearAllCases();
+
+      const stats = caseManagementService.getCaseStatistics();
+
+      expect(stats.totalCases).toBe(0);
+      expect(stats.successRate).toBe(0);
+      expect(stats.averageCost).toBe(0);
+      expect(stats.averageTime).toBe(0);
+      expect(stats.mostCommonFailure).toBeNull();
+      expect(stats.mostCommonBoard).toBeNull();
+    });
+  });
 });

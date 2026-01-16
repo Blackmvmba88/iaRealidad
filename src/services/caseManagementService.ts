@@ -477,6 +477,43 @@ class CaseManagementService {
   }
 
   /**
+   * Export all cases as JSON
+   */
+  exportAllCases(): string {
+    const allCases = Array.from(this.cases.values());
+    return JSON.stringify(
+      {
+        version: '1.0',
+        exportDate: new Date().toISOString(),
+        totalCases: allCases.length,
+        cases: allCases,
+      },
+      null,
+      2,
+    );
+  }
+
+  /**
+   * Export multiple cases by IDs
+   */
+  exportCases(caseIds: string[]): string {
+    const selectedCases = caseIds
+      .map(id => this.cases.get(id))
+      .filter((c): c is RepairCase => c !== undefined);
+
+    return JSON.stringify(
+      {
+        version: '1.0',
+        exportDate: new Date().toISOString(),
+        totalCases: selectedCases.length,
+        cases: selectedCases,
+      },
+      null,
+      2,
+    );
+  }
+
+  /**
    * Import a case from JSON
    */
   importCase(caseJson: string): RepairCase | null {
@@ -493,6 +530,44 @@ class CaseManagementService {
     } catch (error) {
       console.error('Failed to import case:', error);
       return null;
+    }
+  }
+
+  /**
+   * Import multiple cases from JSON export
+   */
+  importCases(
+    casesJson: string,
+  ): {imported: number; failed: number; cases: RepairCase[]} {
+    try {
+      const data = JSON.parse(casesJson);
+      const cases = data.cases || [data]; // Support both single and batch format
+      const importedCases: RepairCase[] = [];
+      let failedCount = 0;
+
+      for (const caseData of cases) {
+        try {
+          this.cases.set(caseData.id, caseData as RepairCase);
+
+          // Update counter if needed
+          if (caseData.caseNumber >= this.caseCounter) {
+            this.caseCounter = caseData.caseNumber + 1;
+          }
+
+          importedCases.push(caseData as RepairCase);
+        } catch {
+          failedCount++;
+        }
+      }
+
+      return {
+        imported: importedCases.length,
+        failed: failedCount,
+        cases: importedCases,
+      };
+    } catch (error) {
+      console.error('Failed to import cases:', error);
+      return {imported: 0, failed: 1, cases: []};
     }
   }
 
@@ -516,6 +591,165 @@ class CaseManagementService {
   clearAllCases(): void {
     this.cases.clear();
     this.caseCounter = 1;
+  }
+
+  // ==================== ADVANCED QUERY & FILTERING ====================
+
+  /**
+   * Query cases with advanced filters
+   */
+  queryCases(filters: {
+    boardType?: string;
+    failurePattern?: FailurePattern;
+    repairSuccess?: boolean;
+    tags?: string[];
+    dateFrom?: string;
+    dateTo?: string;
+    minCost?: number;
+    maxCost?: number;
+    sortBy?: 'date' | 'cost' | 'time' | 'caseNumber';
+    sortOrder?: 'asc' | 'desc';
+    limit?: number;
+    offset?: number;
+  }): RepairCase[] {
+    let results = Array.from(this.cases.values());
+
+    // Apply filters
+    if (filters.boardType) {
+      results = results.filter(c =>
+        c.boardType.toLowerCase().includes(filters.boardType!.toLowerCase()),
+      );
+    }
+
+    if (filters.failurePattern) {
+      results = results.filter(c => c.failurePattern === filters.failurePattern);
+    }
+
+    if (filters.repairSuccess !== undefined) {
+      results = results.filter(c => c.repairSuccess === filters.repairSuccess);
+    }
+
+    if (filters.tags && filters.tags.length > 0) {
+      results = results.filter(c =>
+        filters.tags!.some(tag =>
+          c.tags?.some(t => t.toLowerCase().includes(tag.toLowerCase())),
+        ),
+      );
+    }
+
+    if (filters.dateFrom) {
+      results = results.filter(c => c.timestamp >= filters.dateFrom!);
+    }
+
+    if (filters.dateTo) {
+      results = results.filter(c => c.timestamp <= filters.dateTo!);
+    }
+
+    if (filters.minCost !== undefined) {
+      results = results.filter(
+        c => (c.actualCost || c.estimatedCost) >= filters.minCost!,
+      );
+    }
+
+    if (filters.maxCost !== undefined) {
+      results = results.filter(
+        c => (c.actualCost || c.estimatedCost) <= filters.maxCost!,
+      );
+    }
+
+    // Sort results
+    const sortBy = filters.sortBy || 'date';
+    const sortOrder = filters.sortOrder || 'desc';
+
+    results.sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortBy) {
+        case 'date':
+          comparison = a.timestamp.localeCompare(b.timestamp);
+          break;
+        case 'cost':
+          comparison =
+            (a.actualCost || a.estimatedCost) -
+            (b.actualCost || b.estimatedCost);
+          break;
+        case 'time':
+          comparison =
+            (a.actualTime || a.estimatedTime) -
+            (b.actualTime || b.estimatedTime);
+          break;
+        case 'caseNumber':
+          comparison = a.caseNumber - b.caseNumber;
+          break;
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    // Apply pagination
+    const offset = filters.offset || 0;
+    const limit = filters.limit || results.length;
+
+    return results.slice(offset, offset + limit);
+  }
+
+  /**
+   * Get statistics summary for all cases
+   */
+  getCaseStatistics(): {
+    totalCases: number;
+    successfulRepairs: number;
+    failedRepairs: number;
+    successRate: number;
+    totalCost: number;
+    averageCost: number;
+    totalTime: number;
+    averageTime: number;
+    mostCommonFailure: FailurePattern | null;
+    mostCommonBoard: string | null;
+  } {
+    const allCases = Array.from(this.cases.values());
+    const casesWithActualCost = allCases.filter(c => c.actualCost !== undefined);
+    const casesWithActualTime = allCases.filter(c => c.actualTime !== undefined);
+
+    const successfulRepairs = allCases.filter(c => c.repairSuccess).length;
+    const totalCost = casesWithActualCost.reduce(
+      (sum, c) => sum + (c.actualCost || 0),
+      0,
+    );
+    const totalTime = casesWithActualTime.reduce(
+      (sum, c) => sum + (c.actualTime || 0),
+      0,
+    );
+
+    // Find most common failure
+    const failureCounts = new Map<FailurePattern, number>();
+    allCases.forEach(c => {
+      failureCounts.set(c.failurePattern, (failureCounts.get(c.failurePattern) || 0) + 1);
+    });
+    const mostCommonFailure = Array.from(failureCounts.entries())
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+
+    // Find most common board
+    const boardCounts = new Map<string, number>();
+    allCases.forEach(c => {
+      boardCounts.set(c.boardType, (boardCounts.get(c.boardType) || 0) + 1);
+    });
+    const mostCommonBoard = Array.from(boardCounts.entries())
+      .sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+
+    return {
+      totalCases: allCases.length,
+      successfulRepairs,
+      failedRepairs: allCases.length - successfulRepairs,
+      successRate: allCases.length > 0 ? Math.round((successfulRepairs / allCases.length) * 100) : 0,
+      totalCost,
+      averageCost: casesWithActualCost.length > 0 ? totalCost / casesWithActualCost.length : 0,
+      totalTime,
+      averageTime: casesWithActualTime.length > 0 ? totalTime / casesWithActualTime.length : 0,
+      mostCommonFailure,
+      mostCommonBoard,
+    };
   }
 }
 

@@ -1,0 +1,92 @@
+{
+  "name": "ESP32 DevKit V1 Configuration",
+  "version": "1.0",
+  "description": "Complete board configuration for ESP32 DevKit V1 with diagnostic patterns",
+  "board": {
+    "id": "esp32_devkit_v1",
+    "manufacturer": "Espressif",
+    "model": "ESP32 DevKit V1",
+    "microcontroller": "ESP32-WROOM-32"
+  },
+  "specifications": {
+    "voltage": {
+      "input": {
+        "min": 4.5,
+        "max": 6.0,
+        "typical": 5.0
+      },
+      "output": {
+        "min": 3.2,
+        "max": 3.4,
+        "typical": 3.3
+      }
+    },
+    "current": {
+      "typical": 80,
+      "max": 500
+    }
+  },
+  "testPoints": [
+    {
+      "id": "tp_5v",
+      "name": "5V Input",
+      "type": "VCC",
+      "position": {"x": 50, "y": 100},
+      "expectedVoltage": 5.0,
+      "tolerance": 0.25
+    },
+    {
+      "id": "tp_3v3",
+      "name": "3.3V Regulator Output",
+      "type": "VCC",
+      "position": {"x": 150, "y": 100},
+      "expectedVoltage": 3.3,
+      "tolerance": 0.1
+    },
+    {
+      "id": "tp_gnd",
+      "name": "Ground",
+      "type": "GND",
+      "position": {"x": 100, "y": 150},
+      "expectedVoltage": 0.0,
+      "tolerance": 0.0
+    },
+    {
+      "id": "tp_en",
+      "name": "Enable Pin",
+      "type": "GPIO",
+      "position": {"x": 200, "y": 120},
+      "expectedVoltage": 3.3,
+      "tolerance": 0.2
+    }
+  ],
+  "components": [
+    {
+      "id": "u1",
+      "name": "ESP32-WROOM-32",
+      "type": "microcontroller",
+      "position": {"x": 200, "y": 200},
+      "description": "Main microcontroller with WiFi and Bluetooth"
+    },
+    {
+      "id": "u2",
+      "name": "AMS1117-3.3",
+      "type": "regulator",
+      "position": {"x": 100, "y": 100},
+      "description": "3.3V voltage regulator"
+    },
+    {
+      "id": "u3",
+      "name": "CP2102",
+      "type": "ic",
+      "position": {"x": 300, "y": 100},
+      "description": "USB to UART bridge"
+    }
+  ],
+  "commonFailures": [
+    "voltage_regulator_failure",
+    "firmware_corruption",
+    "power_supply_failure"
+  ],
+  "tags": ["esp32", "wifi", "bluetooth", "iot", "devkit"]
+}
