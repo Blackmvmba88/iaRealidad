@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {
   View,
   Text,
@@ -14,13 +14,17 @@ interface Props {
 }
 
 const ModeSelector: React.FC<Props> = ({currentMode, onModeChange}) => {
-  const modes: {mode: RepairMode; label: string; icon: string}[] = [
-    {mode: 'inspection', label: 'Inspect', icon: '🔍'},
-    {mode: 'measurement', label: 'Measure', icon: '📊'},
-    {mode: 'repair', label: 'Repair', icon: '🔧'},
-    {mode: 'creation', label: 'Create', icon: '⚡'},
-    {mode: 'validation', label: 'Validate', icon: '✓'},
-  ];
+  // Memoize modes array to prevent recreation on each render
+  const modes = useMemo(
+    () => [
+      {mode: 'inspection' as RepairMode, label: 'Inspect', icon: '🔍'},
+      {mode: 'measurement' as RepairMode, label: 'Measure', icon: '📊'},
+      {mode: 'repair' as RepairMode, label: 'Repair', icon: '🔧'},
+      {mode: 'creation' as RepairMode, label: 'Create', icon: '⚡'},
+      {mode: 'validation' as RepairMode, label: 'Validate', icon: '✓'},
+    ],
+    [],
+  );
 
   return (
     <View style={styles.container}>
@@ -91,4 +95,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ModeSelector;
+// Memoize component to prevent unnecessary re-renders
+export default React.memo(ModeSelector);

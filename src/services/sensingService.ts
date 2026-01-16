@@ -373,7 +373,9 @@ class SensingService {
 
     // Warn if sensor is not connected (but allow measurement for testing)
     if (sensor.status !== 'connected' && sensor.status !== 'streaming') {
-      console.warn(`Warning: Recording measurement from disconnected sensor ${sensorId}`);
+      console.warn(
+        `Warning: Recording measurement from disconnected sensor ${sensorId}`,
+      );
     }
 
     const measurement: SensingMeasurement = {
