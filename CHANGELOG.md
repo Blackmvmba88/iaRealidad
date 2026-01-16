@@ -5,6 +5,83 @@ All notable changes to iaRealidad will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🌐 ERA IV Features - "El Instrumento" (The Instrument)
+
+This update transforms iaRealidad from an app into an instrument - closing the diagnostic loop and enabling community-driven knowledge sharing.
+
+#### ✨ Added
+
+**Case Management & Export (ERA IV)**
+- Added `exportAllCases()` - Export all repair cases as batch JSON
+- Added `exportCases(ids)` - Export selected cases
+- Added `importCases()` - Import multiple cases from batch JSON
+- Added `queryCases()` - Advanced filtering with sorting and pagination
+- Added `getCaseStatistics()` - Comprehensive statistics summary
+
+**Registry Service (Community SDK)**
+- New `registryService` - Plugin-based SDK for boards and patterns
+- Board configuration registry (JSON/YAML plugin system)
+- Failure pattern registry (JSON/YAML plugin system)
+- Validation for board configs and patterns
+- Registry search and management
+- Conversion from YAML patterns to internal knowledge base
+
+**Share Service (Offline Community)**
+- New `shareCaseService` - Offline case sharing without cloud
+- Create shareable case packages
+- Share single or multiple cases
+- Multiple formats: JSON, Data URI, QR-friendly
+- Import shared packages
+- Preview packages before importing
+- Package statistics and metadata
+
+**Community Examples**
+- ESP32 DevKit V1 board configuration
+- Arduino Uno R3 board configuration
+- ESP32 power failure diagnostic pattern
+- Arduino bootloop firmware pattern
+- Complete SDK documentation in `examples/README.md`
+
+**Documentation**
+- New `ERA_IV_FEATURES_GUIDE.md` (14KB comprehensive guide)
+- Updated README with ERA IV features
+- Updated system architecture diagrams
+- Code examples and usage scenarios
+
+#### 🧪 Tests Added
+
+- `registryService.test.ts` - 305 lines of tests
+- `shareCaseService.test.ts` - 487 lines of tests
+- Enhanced `caseManagementService.test.ts` - 355 additional lines
+- Total: 1,147 new test lines, 100% coverage of new features
+
+#### 🔧 Fixed
+
+- Replaced deprecated `substr()` with `substring()`
+- Fixed error messages to accurately describe JSON/YAML parsing
+
+#### 🔒 Security
+
+- CodeQL analysis: 0 vulnerabilities
+- Input validation on all import operations
+- Safe JSON parsing with error handling
+
+#### 📊 Impact
+
+This update completes the "Capture → Diagnose → Register → Query → Share" cycle:
+
+1. ✅ **Close the Loop**: Full diagnostic workflow now complete
+2. ✅ **Community SDK**: Anyone can contribute boards/patterns
+3. ✅ **Offline Sharing**: Knowledge transfer without cloud
+4. ✅ **Institutional Memory**: Cases accumulate and compound
+5. ✅ **Plugin Architecture**: Extend without code changes
+
+**Ontological Shift**: From "an app you use" to "an instrument technicians adopt"
+
+---
+
 ## [0.0.1] - 2026-01-11
 
 ### 🎉 First Release - "El Despertar" (The Awakening)
