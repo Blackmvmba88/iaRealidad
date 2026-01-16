@@ -38,6 +38,12 @@ class SensingService {
   private sensorConfigs: Map<SensorType, SensorConfig> = new Map();
   private sensorIdCounter: number = 0;
 
+  // Valid sensor statuses for recording measurements
+  private readonly VALID_RECORDING_STATUSES: SensorStatus[] = [
+    'connected',
+    'streaming',
+  ];
+
   // ==================== SENSOR INITIALIZATION ====================
 
   /**
@@ -47,6 +53,18 @@ class SensingService {
     type: SensorType,
     config?: Partial<SensorConfig>,
   ): Sensor | null {
+    // Validate sensor type
+    if (!type) {
+      console.error('Sensor type is required');
+      return null;
+    }
+
+    // Validate sampling rate if provided
+    if (config?.samplingRate !== undefined && config.samplingRate <= 0) {
+      console.error('Sampling rate must be positive');
+      return null;
+    }
+
     const defaultConfig: SensorConfig = {
       sensorType: type,
       enabled: true,
@@ -76,6 +94,7 @@ class SensingService {
       case 'visual_topology':
         return this.createVisualTopologySensor();
       default:
+        console.error(`Unknown sensor type: ${type}`);
         return null;
     }
   }
@@ -344,9 +363,25 @@ class SensingService {
     componentId?: string,
     pinId?: string,
   ): SensingMeasurement {
+    // Validate input
+    if (!sensorId) {
+      throw new Error('Sensor ID is required');
+    }
+
+    if (value === null || value === undefined) {
+      throw new Error('Measurement value is required');
+    }
+
     const sensor = this.activeSensors.get(sensorId);
     if (!sensor) {
       throw new Error(`Sensor ${sensorId} not found`);
+    }
+
+    // Warn if sensor is not connected (but allow measurement for testing)
+    if (!this.VALID_RECORDING_STATUSES.includes(sensor.status)) {
+      console.warn(
+        `Warning: Recording measurement from disconnected sensor ${sensorId}`,
+      );
     }
 
     const measurement: SensingMeasurement = {

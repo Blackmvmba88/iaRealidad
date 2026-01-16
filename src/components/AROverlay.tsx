@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {RepairMode} from '../types';
 import Svg, {Circle, Rect, Line, Text as SvgText} from 'react-native-svg';
@@ -39,35 +39,46 @@ enum TestStatus {
 }
 
 const AROverlay: React.FC<Props> = ({mode}) => {
-  // Get components from dataService
-  const components = sampleComponents.map(comp => ({
-    id: comp.id,
-    name: comp.name,
-    x: comp.position.x,
-    y: comp.position.y,
-    type: comp.type,
-  }));
-
-  // Extract all pins from components
-  const pins = sampleComponents
-    .filter(comp => comp.pins && comp.pins.length > 0)
-    .flatMap(comp =>
-      comp.pins!.map(pin => ({
-        id: pin.id,
-        name: pin.name,
-        x: pin.position.x,
-        y: pin.position.y,
-        type: pin.type,
+  // Memoize expensive computations
+  const components = useMemo(
+    () =>
+      sampleComponents.map(comp => ({
+        id: comp.id,
+        name: comp.name,
+        x: comp.position.x,
+        y: comp.position.y,
+        type: comp.type,
       })),
-    );
+    [],
+  );
+
+  // Extract all pins from components (memoized)
+  const pins = useMemo(
+    () =>
+      sampleComponents
+        .filter(comp => comp.pins && comp.pins.length > 0)
+        .flatMap(comp =>
+          comp.pins!.map(pin => ({
+            id: pin.id,
+            name: pin.name,
+            x: pin.position.x,
+            y: pin.position.y,
+            type: pin.type,
+          })),
+        ),
+    [],
+  );
 
   // Validation test results (in real app, these would come from actual tests)
-  const validationResults = [
-    {componentId: 'u1', status: TestStatus.PASS},
-    {componentId: 'reg1', status: TestStatus.PASS},
-    {componentId: 'r1', status: TestStatus.PASS},
-    {componentId: 'c1', status: TestStatus.WARNING},
-  ];
+  const validationResults = useMemo(
+    () => [
+      {componentId: 'u1', status: TestStatus.PASS},
+      {componentId: 'reg1', status: TestStatus.PASS},
+      {componentId: 'r1', status: TestStatus.PASS},
+      {componentId: 'c1', status: TestStatus.WARNING},
+    ],
+    [],
+  );
 
   const renderInspectionMode = () => (
     <View style={styles.overlayContainer}>
@@ -480,4 +491,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AROverlay;
+// Memoize component to prevent unnecessary re-renders
+export default React.memo(AROverlay);

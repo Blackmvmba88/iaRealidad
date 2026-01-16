@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {
   View,
   Text,
@@ -20,50 +20,54 @@ interface Props {
 const HomeScreen: React.FC<Props> = ({navigation}) => {
   const [selectedMode, setSelectedMode] = useState<RepairMode>('inspection');
 
-  const modes: {
-    mode: RepairMode;
-    title: string;
-    description: string;
-    icon: string;
-  }[] = [
-    {
-      mode: 'inspection',
-      title: 'Inspection',
-      description:
-        'Identify components, pins, and connections on circuit boards',
-      icon: '🔍',
-    },
-    {
-      mode: 'measurement',
-      title: 'Measurement',
-      description:
-        'Guide multimeter probing with expected voltage/resistance ranges',
-      icon: '📊',
-    },
-    {
-      mode: 'repair',
-      title: 'Repair',
-      description:
-        'Step-by-step repair instructions with component highlighting',
-      icon: '🔧',
-    },
-    {
-      mode: 'creation',
-      title: 'Creation',
-      description: 'Guide adding Bluetooth/WiFi modules and new components',
-      icon: '⚡',
-    },
-    {
-      mode: 'validation',
-      title: 'Validation',
-      description: 'Test circuit functionality and verify connections',
-      icon: '✓',
-    },
-  ];
+  // Memoize modes array to prevent recreation on each render
+  const modes = useMemo(
+    () => [
+      {
+        mode: 'inspection' as RepairMode,
+        title: 'Inspection',
+        description:
+          'Identify components, pins, and connections on circuit boards',
+        icon: '🔍',
+      },
+      {
+        mode: 'measurement' as RepairMode,
+        title: 'Measurement',
+        description:
+          'Guide multimeter probing with expected voltage/resistance ranges',
+        icon: '📊',
+      },
+      {
+        mode: 'repair' as RepairMode,
+        title: 'Repair',
+        description:
+          'Step-by-step repair instructions with component highlighting',
+        icon: '🔧',
+      },
+      {
+        mode: 'creation' as RepairMode,
+        title: 'Creation',
+        description: 'Guide adding Bluetooth/WiFi modules and new components',
+        icon: '⚡',
+      },
+      {
+        mode: 'validation' as RepairMode,
+        title: 'Validation',
+        description: 'Test circuit functionality and verify connections',
+        icon: '✓',
+      },
+    ],
+    [],
+  );
 
-  const handleStartAR = () => {
+  // Memoize callbacks to prevent unnecessary re-renders
+  const handleStartAR = useCallback(() => {
     navigation.navigate('ARCamera');
-  };
+  }, [navigation]);
+
+  const handleModeSelect = useCallback((mode: RepairMode) => {
+    setSelectedMode(mode);
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -84,7 +88,7 @@ const HomeScreen: React.FC<Props> = ({navigation}) => {
                 styles.modeCard,
                 selectedMode === mode.mode && styles.modeCardSelected,
               ]}
-              onPress={() => setSelectedMode(mode.mode)}>
+              onPress={() => handleModeSelect(mode.mode)}>
               <Text style={styles.modeIcon}>{mode.icon}</Text>
               <Text style={styles.modeTitle}>{mode.title}</Text>
               <Text style={styles.modeDescription}>{mode.description}</Text>
@@ -212,4 +216,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HomeScreen;
+// Memoize the component to prevent unnecessary re-renders
+export default React.memo(HomeScreen);
