@@ -38,6 +38,12 @@ class SensingService {
   private sensorConfigs: Map<SensorType, SensorConfig> = new Map();
   private sensorIdCounter: number = 0;
 
+  // Valid sensor statuses for recording measurements
+  private readonly VALID_RECORDING_STATUSES: SensorStatus[] = [
+    'connected',
+    'streaming',
+  ];
+
   // ==================== SENSOR INITIALIZATION ====================
 
   /**
@@ -372,7 +378,7 @@ class SensingService {
     }
 
     // Warn if sensor is not connected (but allow measurement for testing)
-    if (sensor.status !== 'connected' && sensor.status !== 'streaming') {
+    if (!this.VALID_RECORDING_STATUSES.includes(sensor.status)) {
       console.warn(
         `Warning: Recording measurement from disconnected sensor ${sensorId}`,
       );

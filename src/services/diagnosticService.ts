@@ -348,7 +348,7 @@ class DiagnosticService {
       probableCauses,
     );
 
-    // Get affected components (optimized with Set for deduplication)
+    // Get affected components (optimized with filtering before Set creation)
     const affectedComponents = Array.from(
       new Set(
         symptoms
@@ -390,9 +390,12 @@ class DiagnosticService {
     // Optimize: Pre-index symptoms by type for faster lookup
     const symptomsByType = new Map<string, Symptom[]>();
     for (const symptom of symptoms) {
-      const existing = symptomsByType.get(symptom.type) || [];
-      existing.push(symptom);
-      symptomsByType.set(symptom.type, existing);
+      const existing = symptomsByType.get(symptom.type);
+      if (existing) {
+        existing.push(symptom);
+      } else {
+        symptomsByType.set(symptom.type, [symptom]);
+      }
     }
 
     for (const rule of this.inferenceRules) {
