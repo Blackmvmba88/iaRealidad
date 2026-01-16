@@ -303,6 +303,20 @@ class DiagnosticService {
    * Perform comprehensive diagnosis based on symptoms
    */
   diagnose(symptoms: Symptom[]): DiagnosticResult {
+    // Input validation
+    if (!Array.isArray(symptoms) || symptoms.length === 0) {
+      throw new Error('Invalid symptoms: must be a non-empty array');
+    }
+
+    // Validate each symptom has required fields
+    symptoms.forEach((symptom, index) => {
+      if (!symptom.id || !symptom.type || !symptom.description) {
+        throw new Error(
+          `Invalid symptom at index ${index}: missing required fields`,
+        );
+      }
+    });
+
     const diagnosticId = `diag_${Date.now()}_${this.diagnosticIdCounter++}`;
 
     // Apply inference rules
@@ -334,10 +348,14 @@ class DiagnosticService {
       probableCauses,
     );
 
-    // Get affected components
-    const affectedComponents = symptoms
-      .map(s => s.componentId)
-      .filter((id): id is string => id !== undefined);
+    // Get affected components (optimized with Set for deduplication)
+    const affectedComponents = Array.from(
+      new Set(
+        symptoms
+          .map(s => s.componentId)
+          .filter((id): id is string => id !== undefined),
+      ),
+    );
 
     // Estimate difficulty, time, and cost
     const knowledge = this.failureKnowledgeBase.get(failurePattern);
@@ -349,7 +367,7 @@ class DiagnosticService {
       failurePattern,
       confidence,
       probableCauses,
-      affectedComponents: Array.from(new Set(affectedComponents)),
+      affectedComponents,
       powerRouteAnalysis,
       recommendations,
       estimatedDifficulty: knowledge?.difficulty || 'medium',
@@ -359,20 +377,33 @@ class DiagnosticService {
   }
 
   /**
-   * Apply inference rules to symptoms
+   * Apply inference rules to symptoms (optimized with early exits)
    */
   private applyInferenceRules(symptoms: Symptom[]): InferenceRule[] {
     const matchedRules: InferenceRule[] = [];
+
+    // Early exit if no symptoms
+    if (symptoms.length === 0) {
+      return matchedRules;
+    }
+
+    // Optimize: Pre-index symptoms by type for faster lookup
+    const symptomsByType = new Map<string, Symptom[]>();
+    for (const symptom of symptoms) {
+      const existing = symptomsByType.get(symptom.type) || [];
+      existing.push(symptom);
+      symptomsByType.set(symptom.type, existing);
+    }
 
     for (const rule of this.inferenceRules) {
       let matches = true;
 
       for (const condition of rule.conditions) {
-        const hasMatchingSymptom = symptoms.some(symptom => {
-          if (symptom.type !== condition.symptomType) {
-            return false;
-          }
+        // Use indexed lookup instead of full array scan
+        const relevantSymptoms =
+          symptomsByType.get(condition.symptomType) || [];
 
+        const hasMatchingSymptom = relevantSymptoms.some(symptom => {
           if (
             condition.measurementRange &&
             symptom.measuredValue !== undefined
