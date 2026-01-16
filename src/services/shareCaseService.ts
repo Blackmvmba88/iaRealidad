@@ -83,7 +83,7 @@ class ShareCaseService {
     const allTags = cases.flatMap(c => c.tags || []);
     const tags = Array.from(new Set(allTags));
 
-    const packageId = `pkg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const packageId = `pkg_${Date.now()}_${Math.random().toString(36).substring(2, 11)}`;
 
     return {
       version: this.VERSION,

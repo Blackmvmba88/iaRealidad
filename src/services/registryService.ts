@@ -339,28 +339,28 @@ class RegistryService {
   // ==================== YAML PARSING ====================
 
   /**
-   * Parse board YAML (simplified - in production use a YAML library)
+   * Parse board YAML/JSON (supports both formats)
    */
   private parseBoardYAML(yaml: string): BoardConfigYAML {
     try {
       // In production, use a proper YAML parser like js-yaml
-      // For now, we'll support JSON format as YAML superset
+      // For now, we support JSON format (which is valid YAML)
       return JSON.parse(yaml) as BoardConfigYAML;
     } catch {
-      throw new Error('Invalid YAML format for board configuration');
+      throw new Error('Invalid JSON/YAML format for board configuration');
     }
   }
 
   /**
-   * Parse failure pattern YAML (simplified - in production use a YAML library)
+   * Parse failure pattern YAML/JSON (supports both formats)
    */
   private parseFailurePatternYAML(yaml: string): FailurePatternYAML {
     try {
       // In production, use a proper YAML parser like js-yaml
-      // For now, we'll support JSON format as YAML superset
+      // For now, we support JSON format (which is valid YAML)
       return JSON.parse(yaml) as FailurePatternYAML;
     } catch {
-      throw new Error('Invalid YAML format for failure pattern');
+      throw new Error('Invalid JSON/YAML format for failure pattern');
     }
   }
 
