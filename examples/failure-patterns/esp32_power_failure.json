@@ -1,0 +1,104 @@
+{
+  "name": "ESP32 Power Failure Pattern",
+  "version": "1.0",
+  "description": "Diagnostic pattern for ESP32 power supply and voltage regulator failures",
+  "pattern": {
+    "id": "power_supply_failure",
+    "displayName": "Power Supply Failure",
+    "category": "power"
+  },
+  "symptoms": [
+    {
+      "type": "no_voltage",
+      "description": "No 5V at USB input",
+      "severity": "critical"
+    },
+    {
+      "type": "no_voltage",
+      "description": "No 3.3V at regulator output",
+      "severity": "critical"
+    },
+    {
+      "type": "low_voltage",
+      "description": "Voltage drops under load",
+      "severity": "high"
+    }
+  ],
+  "causes": [
+    {
+      "description": "Dead or faulty USB cable",
+      "probability": 85,
+      "reasoning": "Most common cause - cables wear out from repeated use",
+      "testProcedure": "Test cable with another device, check continuity"
+    },
+    {
+      "description": "Blown protection fuse",
+      "probability": 70,
+      "reasoning": "Common protection mechanism, often triggered by shorts",
+      "testProcedure": "Check fuse continuity with multimeter"
+    },
+    {
+      "description": "Damaged USB connector",
+      "probability": 60,
+      "reasoning": "Physical damage from repeated insertion/removal",
+      "testProcedure": "Visual inspection, check for loose pins"
+    }
+  ],
+  "diagnosticSteps": [
+    "Check USB cable with known-good device",
+    "Measure voltage at USB connector pins (should be 5V)",
+    "Check fuse continuity (if present)",
+    "Check protection diode (if present)",
+    "Look for physical damage on board",
+    "Test with external 5V power supply"
+  ],
+  "repairProcedures": [
+    {
+      "description": "Replace USB cable",
+      "tools": ["Known-good USB cable"],
+      "steps": [
+        "Disconnect existing cable",
+        "Connect known-good USB cable",
+        "Measure voltage at board input",
+        "Verify device powers on"
+      ],
+      "estimatedTime": 5,
+      "difficulty": "easy"
+    },
+    {
+      "description": "Replace blown fuse",
+      "tools": ["Soldering iron", "Replacement fuse", "Multimeter"],
+      "steps": [
+        "Identify fuse location on board",
+        "Test fuse continuity",
+        "Desolder and remove blown fuse",
+        "Solder new fuse in place",
+        "Verify continuity",
+        "Test board power"
+      ],
+      "warnings": ["Check for shorts before applying power"],
+      "estimatedTime": 15,
+      "difficulty": "medium"
+    },
+    {
+      "description": "Reflow USB connector",
+      "tools": ["Soldering iron", "Flux", "Multimeter"],
+      "steps": [
+        "Apply flux to USB connector pins",
+        "Carefully reflow solder on each pin",
+        "Check for cold solder joints",
+        "Verify mechanical stability",
+        "Test with multimeter"
+      ],
+      "warnings": ["Avoid overheating plastic connector body"],
+      "estimatedTime": 20,
+      "difficulty": "medium"
+    }
+  ],
+  "estimatedCost": {
+    "min": 0.0,
+    "max": 3.0
+  },
+  "successRate": 90,
+  "tags": ["esp32", "power", "usb", "beginner-friendly"]
+}

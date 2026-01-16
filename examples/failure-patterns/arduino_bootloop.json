@@ -1,0 +1,106 @@
+{
+  "name": "Arduino Bootloop Pattern",
+  "version": "1.0",
+  "description": "Diagnostic pattern for Arduino bootloop and firmware corruption issues",
+  "pattern": {
+    "id": "firmware_corruption",
+    "displayName": "Firmware Corruption / Bootloop",
+    "category": "firmware"
+  },
+  "symptoms": [
+    {
+      "type": "no_communication",
+      "description": "No response on serial port",
+      "severity": "high"
+    },
+    {
+      "type": "intermittent",
+      "description": "Board resets continuously",
+      "severity": "high"
+    },
+    {
+      "type": "no_communication",
+      "description": "Partial boot, then crash",
+      "severity": "medium"
+    }
+  ],
+  "causes": [
+    {
+      "description": "Failed firmware upload",
+      "probability": 80,
+      "reasoning": "Upload interrupted by power loss or communication error",
+      "testProcedure": "Try entering bootloader mode manually"
+    },
+    {
+      "description": "Corrupted bootloader",
+      "probability": 65,
+      "reasoning": "Bootloader overwritten or damaged",
+      "testProcedure": "Attempt to burn bootloader with ISP programmer"
+    },
+    {
+      "description": "Wrong board settings",
+      "probability": 70,
+      "reasoning": "Uploaded sketch with incorrect board configuration",
+      "testProcedure": "Verify Arduino IDE board selection matches hardware"
+    }
+  ],
+  "diagnosticSteps": [
+    "Verify stable 5V power supply",
+    "Check USB cable and connection",
+    "Monitor serial output during boot",
+    "Try different baud rates",
+    "Attempt to enter bootloader mode",
+    "Check for physical damage to crystal oscillator"
+  ],
+  "repairProcedures": [
+    {
+      "description": "Reflash firmware via bootloader",
+      "tools": ["Arduino IDE", "USB cable", "Computer"],
+      "steps": [
+        "Select correct board in Arduino IDE",
+        "Select correct COM port",
+        "Hold RESET while clicking Upload",
+        "Release RESET when upload starts",
+        "Wait for upload to complete",
+        "Open Serial Monitor to verify"
+      ],
+      "estimatedTime": 10,
+      "difficulty": "easy"
+    },
+    {
+      "description": "Burn bootloader with ISP",
+      "tools": ["Arduino as ISP", "6 jumper wires", "Arduino IDE"],
+      "steps": [
+        "Program another Arduino as ISP",
+        "Connect ISP Arduino to target board ICSP pins",
+        "Select 'Arduino as ISP' as programmer",
+        "Click 'Burn Bootloader'",
+        "Wait for confirmation",
+        "Upload sketch normally"
+      ],
+      "warnings": ["Ensure correct pin connections", "Use 5V compatible programmer"],
+      "estimatedTime": 30,
+      "difficulty": "hard"
+    },
+    {
+      "description": "Upload via external programmer",
+      "tools": ["USBasp or similar", "Arduino IDE", "6 jumper wires"],
+      "steps": [
+        "Connect programmer to ICSP header",
+        "Select programmer in Arduino IDE",
+        "Choose 'Upload Using Programmer'",
+        "Wait for upload to complete",
+        "Disconnect programmer",
+        "Reset board and test"
+      ],
+      "estimatedTime": 20,
+      "difficulty": "medium"
+    }
+  ],
+  "estimatedCost": {
+    "min": 0.0,
+    "max": 5.0
+  },
+  "successRate": 85,
+  "tags": ["arduino", "firmware", "bootloader", "upload", "common"]
+}
